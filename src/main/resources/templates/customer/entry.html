@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html xmlns="http://thymeleaf.org">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>入金管理システム</title>
+	<link rel="stylesheet" href="/css/bootstrap.css" />
+	<link rel="stylesheet" href="/css/layout.css" />
+	<link rel="stylesheet" href="/css/style.css" />
+	
+	<script src="/js/jquery-3.1.1.js"></script>
+	<script src="/js/tether.js"></script>
+	<script src="/js/bootstrap.js"></script>
+	<script src="/js/table_size.js"></script>
+</head>
+
+<body>
+<!-- タイトルバー -->
+<nav class="navbar navbar-toggleable-md navbar-inverse fixed-top bg-inverse">
+  <button class="navbar-toggler navbar-toggler-right hidden-lg-up" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <a class="navbar-brand" href="/">入金管理システム</a>
+
+  <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+		<a class="user-address" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">ログイン中　：　abc@defghij.jp</a>
+		<div class="dropdown-menu">
+		  <a class="dropdown-item" href="#">ログアウト</a>
+		</div>
+  </div>
+</nav>
+
+<!-- コンテンツ -->
+<div class="container-fluid">
+  <div class="row">
+  <!-- サイドメニュー -->
+    <nav class="col-sm-3 col-md-2 hidden-xs-down bg-faded sidebar">
+      <ul class="nav nav-pills flex-column">
+        <li class="nav-item">
+          <a class="nav-link active" href="/">顧客データ<span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/payment/search">入金データ</a>
+        </li>
+      </ul>
+
+      <ul class="nav nav-pills flex-column">
+        <li class="nav-item">
+          <a class="nav-link" href="/admin/search">管理者データ</a>
+        </li>
+      </ul>
+    </nav>
+
+<!-- メインコンテンツ -->
+<main class="col-sm-9 offset-sm-3 col-md-10 offset-md-2 pt-3">
+  
+<!-- テーブル -->
+    <h5>新規登録</h5><span class="explain">入力終了後、「確認」をクリックしてください。</span>
+    <form id="entry">
+    <button type="button" class="btn btn-info btn-right btn-margin-left btn-margin-bottom" onclick="location.href='/customer/check'">確認</button></form>
+    <button type="button" class="btn btn-secondary btn-right btn-margin-bottom" onclick="location.href='/'">戻る</button>
+    <div class="table">
+      <table class="table table-bordered table-sm table-hover table-list">
+      	<tbody>
+          <tr>
+          	<th>名称</th>
+            <td><input class="width-650" type="text" form="entry" name="name"  maxlength="40" />
+            <span style="visibility : hidden; color: red; margin-left: 10px;">必須項目です。</span></td>
+          </tr>
+          <tr>
+         		<th>かな</th> 
+            <td><input class="width-650" type="text" form="entry" name="kana" />
+            <span style="visibility : hidden; color: red; margin-left: 10px;">必須項目です。</span></td>
+          </tr>
+          <tr>
+          	<th>郵便番号<small>&emsp;※半角数字</small></th>
+            <td><input class="width-100" type="text" form="entry" name="postal_code" maxlength="7" />
+            <button class="btn auto-insert">住所自動入力</button>
+            <span style="visibility : hidden; color: red; margin-left: 10px;">正しい郵便番号を入力してください。</span></td>
+          </tr>
+          <tr>
+          	<th>住所1</th>
+            <td><select form="entry" name="address1" class="table-form-select">
+				    	<option selected="selected">都道府県選択</option>
+				    	<option>北海道</option>
+				    	<option>東京都</option>
+				    	<option>沖縄県</option>
+						</select></td>
+          </tr>
+          <tr>
+            <th>住所2</th>
+            <td><input class="input-width-max" type="text" form="entry" name="address2" maxlength="100" /></td>
+          </tr>
+          <tr>
+            <th>電話番号<small>&emsp;※半角数字</small></th>
+            <td><input class="width-150" type="text" form="entry" name="tel" maxlength="14" />
+						<span style="visibility : hidden; color: red; margin-left: 10px;">正しい電話番号を入力してください。</span></td>
+          </tr>
+          <tr>
+            <th>FAX番号<small>&emsp;※半角数字</small></th>
+            <td><input class="width-150" type="text" form="entry" name="fax" maxlength="14" />
+						<span style="visibility : hidden; color: red; margin-left: 10px;">正しいFAX番号を入力してください。</span></td>
+          </tr>
+          <tr>
+            <th>税区分</th>
+            <td><select form="entry" name="address1" class="table-form-select">
+				    	<option value="1" selected="selected">1 : 切捨て</option>
+				    	<option value="2">2 : 四捨五入</option>
+				    	<option value="3">3 : 切り上げ</option>
+						</select></td>
+          </tr>
+          <tr>
+            <th>丸め方法</th>
+            <td><select form="entry" name="rounding_type" class="table-form-select">
+				    	<option value="1" selected="selected">1 : 明細行</option>
+				    	<option value="2">2 : 請求書</option>
+						</select></td>
+          </tr>
+          <tr>
+            <th>締め日</th>
+            <td><select form="entry" name="address1" class="table-form-select">
+				    	<option value="5" selected="selected">5日</option>
+				    	<option value="10">10日</option>
+				    	<option value="15">15日</option>
+				    	<option value="20">20日</option>
+				    	<option value="25">25日</option>
+				    	<option value="31">31日</option>
+						</select></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+</main>
+  </div>
+</div>
+</body>
+</html>

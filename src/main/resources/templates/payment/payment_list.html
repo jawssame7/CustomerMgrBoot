@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html xmlns="http://thymeleaf.org">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>入金管理システム</title>
+	<link rel="stylesheet" href="/css/jquery-ui.css" />
+	<link rel="stylesheet" href="/css/bootstrap.css" />
+	<link rel="stylesheet" href="/css/layout.css" />
+	<link rel="stylesheet" href="/css/style.css" />
+	
+	<script src="/js/jquery-3.1.1.js"></script>
+	<script src="/js/jquery-ui.js"></script>
+	<script src="/js/tether.js"></script>
+	<script src="/js/bootstrap.js"></script>
+	<script src="/js/table_size.js"></script>
+	<script type="text/javascript">
+	$(function() {
+	  // 候補リストに表示するデータを配列で準備
+	  var name_list = [
+	    '顧客データ',
+	    '株式会社W・I・Z',
+	    'テストデータ03',
+	    'テストデータ04'
+	  ];
+	  
+	  var kana_list = [
+	    'こきゃくでーた',
+	    'かぶしきがいしゃうぃず',
+	    'てすとでーたさん',
+	    'てすとでーたよん'
+	  ];
+	  
+	
+	  // オートコンプリート機能を適用
+	  $('#customer_name').autocomplete({
+	    source: name_list,
+	    autoFocus: true,
+	    delay: 300,
+	    minLength: 2
+	  });
+	  
+	  $('#customer_kana').autocomplete({
+		    source: kana_list,
+		    autoFocus: true,
+		    delay: 300,
+		    minLength: 3
+		  });
+	});
+	</script>
+</head>
+
+<body>
+<!-- タイトルバー -->
+<nav class="navbar navbar-toggleable-md navbar-inverse fixed-top bg-inverse">
+  <button class="navbar-toggler navbar-toggler-right hidden-lg-up" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <a class="navbar-brand" href="/">入金管理システム</a>
+
+  <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+		<a class="user-address" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">ログイン中　：　abc@defghij.jp</a>
+		<div class="dropdown-menu">
+		  <a class="dropdown-item" href="#">ログアウト</a>
+		</div>
+  </div>
+</nav>
+
+<!-- コンテンツ -->
+<div class="container-fluid">
+  <div class="row">
+  <!-- サイドメニュー -->
+    <nav class="col-sm-3 col-md-2 hidden-xs-down bg-faded sidebar">
+      <ul class="nav nav-pills flex-column">
+        <li class="nav-item">
+          <a class="nav-link" href="/">顧客データ</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" href="/payment/search">入金データ<span class="sr-only">(current)</span></a>
+        </li>
+      </ul>
+
+      <ul class="nav nav-pills flex-column">
+        <li class="nav-item">
+          <a class="nav-link" href="/admin/search">管理者データ</a>
+        </li>
+      </ul>
+    </nav>
+
+<!-- メインコンテンツ -->
+<main class="col-sm-9 offset-sm-3 col-md-10 offset-md-2 pt-3">
+<!-- 検索欄 -->
+    <div id="accordion" role="tablist" aria-multiselectable="true">
+      <div class="card">
+        <div class="card-header-sm" role="tab" id="heading">
+          <h5 class="mb-0">
+						<a data-toggle="collapse" data-parent="#accordion" href="#collapse" aria-expanded="true" aria-controls="collapse" class="search-area">
+							検索条件の設定
+            </a>
+					</h5>
+        </div>
+        
+        <div id="collapse" class="collapse show search-list" role="tabpanel" aria-labelledby="heading">
+          <div class="card-block-sm">
+          <form id="form-search" class="form-scroll">
+						<div class="form-group-sm row">
+						  <label for="name" class="col-2 col-form-label">顧客名称</label>
+						  <div class="col-10">
+						    <input id="customer_name" class="form-control" type="search" name="name" />
+						  </div>
+						</div>
+						<div class="form-group-sm row">
+						  <label for="kana" class="col-2 col-form-label">顧客名称（かな）</label>
+						  <div class="col-10">
+						    <input id="customer_kana" class="form-control" type="search" name="kana" />
+						  </div>
+						</div>
+						<div class="form-group-sm row">
+						  <label for="postal_code" class="col-2 col-form-label">郵便番号<small>&emsp;※数字のみ</small></label>
+						  <div class="col-2">
+						    <input id="postal_code" class="form-control" type="search" />
+						  </div>
+						</div>
+						<div class="form-group-sm row">
+						  <label for="address1" class="col-2 col-form-label">住所1</label>
+						  <div class="col-2">
+						    <select id="address1" class="search-select">
+						    	<option selected="selected">都道府県選択</option>
+						    	<option>北海道</option>
+						    	<option>東京都</option>
+						    	<option>沖縄県</option>
+						    </select>
+						  </div>
+						  <div class="col-1"></div>
+						  <label for="address2" class="col-2 col-form-label">住所2</label>
+						  <div class="col-5">
+						    <input id="address2" class="form-control" type="search" />
+						  </div>
+						</div>
+						<div class="form-group-sm row">
+						  <label for="tel" class="col-2 col-form-label">電話番号<small>&emsp;※数字のみ</small></label>
+						  <div class="col-2">
+						    <input id="tel" class="form-control" type="search" />
+						  </div>
+						  <div class="col-1"></div>
+						  <label for="fax" class="col-2 col-form-label">FAX番号<small>&emsp;※数字のみ</small></label>
+						  <div class="col-2">
+						    <input id="fax" class="form-control" type="search" />
+						  </div>
+						</div>
+						<div class="form-group-sm row">
+						  <label for="date" class="col-2 col-form-label">年月</label>
+						  <div class="form-padding">
+						  	<select id="date" class="search-select">
+						    	<option selected="selected">年</option>
+						    	<option>2015</option>
+						    	<option>2016</option>
+						    	<option>2017</option>
+						    </select>
+						  </div>
+						  <div class="select-assist">/</div>
+						 	<div class="form-padding">
+						  	<select id="date" class="search-select">
+						    	<option selected="selected">月</option>
+						    	<option>01</option>
+						    	<option>02</option>
+						    	<option>03</option>
+						    	<option>04</option>
+						    	<option>05</option>
+						    	<option>06</option>
+						    	<option>07</option>
+						    	<option>08</option>
+						    	<option>09</option>
+						    	<option>10</option>
+						    	<option>11</option>
+						    	<option>12</option>
+						    </select>
+						  </div>
+						  <div class="select-assist">～</div>
+						  <div class="form-padding">
+						  	<select id="date" class="search-select">
+						    	<option selected="selected">年</option>
+						    	<option>2015</option>
+						    	<option>2016</option>
+						    	<option>2017</option>
+						    </select>
+						  </div>
+						  <div class="select-assist">/</div>
+						 	<div class="form-padding">
+						  	<select id="date" class="search-select">
+						    	<option selected="selected">月</option>
+						    	<option>01</option>
+						    	<option>02</option>
+						    	<option>03</option>
+						    	<option>04</option>
+						    	<option>05</option>
+						    	<option>06</option>
+						    	<option>07</option>
+						    	<option>08</option>
+						    	<option>09</option>
+						    	<option>10</option>
+						    	<option>11</option>
+						    	<option>12</option>
+						    </select>
+						  </div>
+						</div>
+					</form>
+					<hr />
+          <button type="button" class="btn btn-primary btn-right btn-margin-left" onclick="location.href='/'">検　索</button>
+          <input type="reset" form="form-search" value="検索条件リセット" class="btn btn-secondary btn-search btn-right" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h5>入金データ</h5>
+    <!-- テーブル -->
+    <div class="table-responsive">
+      <table class="table table-striped table-bordered table-sm table-hover">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>顧客名称</th>
+            <th>年月</th>
+            <th>合計金額</th>
+            <th>消費税合計</th>
+            <th>入金額</th>
+            <th>値引き額</th>
+            <th>繰越額</th>
+            <th>登録日時</th>
+            <th>更新日時</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><a>1</a></td>
+            <td><a href="/customer/detail">顧客データ</a></td>
+            <td><a href="/slip/search">2017/02</a></td>
+            <td>108,000</td>
+            <td>8,000</td>
+            <td><a href="#" data-toggle="modal" data-target="#payment_amount" data-whatever="30000">30,000</a></td>
+            <td>0</td>
+            <td>0</td>
+            <td>2017/03/02 13:00</td>
+            <td>2017/03/20 10:00</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>テストデータ</td>
+            <td>2016/12</td>
+            <td>1,080</td>
+            <td>80</td>
+            <td>500</td>
+            <td>580</td>
+            <td>0</td>
+            <td>2017/01/04 10:00</td>
+            <td>2017/01/05 16:00</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>テスト</td>
+            <td>2015/01</td>
+            <td>100,000</td>
+            <td>0</td>
+            <td>100,000</td>
+            <td>0</td>
+            <td>0</td>
+            <td>2015/02/01 10:00</td>
+            <td>2017/02/01 10:00</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>テスト</td>
+            <td>2015/01</td>
+            <td>100,000</td>
+            <td>0</td>
+            <td>100,000</td>
+            <td>0</td>
+            <td>0</td>
+            <td>2015/02/01 10:00</td>
+            <td>2017/02/01 10:00</td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td>テスト</td>
+            <td>2015/01</td>
+            <td>100,000</td>
+            <td>0</td>
+            <td>100,000</td>
+            <td>0</td>
+            <td>0</td>
+            <td>2015/02/01 10:00</td>
+            <td>2017/02/01 10:00</td>
+          </tr>
+          <tr>
+            <td>6</td>
+            <td>テスト</td>
+            <td>2015/01</td>
+            <td>100,000</td>
+            <td>0</td>
+            <td>100,000</td>
+            <td>0</td>
+            <td>0</td>
+            <td>2015/02/01 10:00</td>
+            <td>2017/02/01 10:00</td>
+          </tr>
+          <tr>
+            <td>7</td>
+            <td>テスト</td>
+            <td>2015/01</td>
+            <td>100,000</td>
+            <td>0</td>
+            <td>100,000</td>
+            <td>0</td>
+            <td>0</td>
+            <td>2015/02/01 10:00</td>
+            <td>2017/02/01 10:00</td>
+          </tr>
+          <tr>
+            <td>8</td>
+            <td>テスト</td>
+            <td>2015/01</td>
+            <td>100,000</td>
+            <td>0</td>
+            <td>100,000</td>
+            <td>0</td>
+            <td>0</td>
+            <td>2015/02/01 10:00</td>
+            <td>2017/02/01 10:00</td>
+          </tr>
+          <tr>
+            <td>9</td>
+            <td>テスト</td>
+            <td>2015/01</td>
+            <td>100,000</td>
+            <td>0</td>
+            <td>100,000</td>
+            <td>0</td>
+            <td>0</td>
+            <td>2015/02/01 10:00</td>
+            <td>2017/02/01 10:00</td>
+          </tr>
+          <tr>
+            <td>10</td>
+            <td>テスト</td>
+            <td>2015/01</td>
+            <td>100,000</td>
+            <td>0</td>
+            <td>100,000</td>
+            <td>0</td>
+            <td>0</td>
+            <td>2015/02/01 10:00</td>
+            <td>2017/02/01 10:00</td>
+          </tr>
+          <tr>
+            <td>11</td>
+            <td>テスト</td>
+            <td>2015/01</td>
+            <td>100,000</td>
+            <td>0</td>
+            <td>100,000</td>
+            <td>0</td>
+            <td>0</td>
+            <td>2015/02/01 10:00</td>
+            <td>2017/02/01 10:00</td>
+          </tr>
+          <tr>
+            <td>12</td>
+            <td>テスト</td>
+            <td>2015/01</td>
+            <td>100,000</td>
+            <td>0</td>
+            <td>100,000</td>
+            <td>0</td>
+            <td>0</td>
+            <td>2015/02/01 10:00</td>
+            <td>2017/02/01 10:00</td>
+          </tr>
+          <tr>
+            <td>13</td>
+            <td>テスト</td>
+            <td>2015/01</td>
+            <td>100,000</td>
+            <td>0</td>
+            <td>100,000</td>
+            <td>0</td>
+            <td>0</td>
+            <td>2015/02/01 10:00</td>
+            <td>2017/02/01 10:00</td>
+          </tr>
+          <tr>
+            <td>14</td>
+            <td>テスト</td>
+            <td>2015/01</td>
+            <td>100,000</td>
+            <td>0</td>
+            <td>100,000</td>
+            <td>0</td>
+            <td>0</td>
+            <td>2015/02/01 10:00</td>
+            <td>2017/02/01 10:00</td>
+          </tr>
+          <tr>
+            <td>15</td>
+            <td>テスト</td>
+            <td>2015/01</td>
+            <td>100,000</td>
+            <td>0</td>
+            <td>100,000</td>
+            <td>0</td>
+            <td>0</td>
+            <td>2015/02/01 10:00</td>
+            <td>2017/02/01 10:00</td>
+          </tr>
+          <tr>
+            <td>16</td>
+            <td>テスト</td>
+            <td>2015/01</td>
+            <td>100,000</td>
+            <td>0</td>
+            <td>100,000</td>
+            <td>0</td>
+            <td>0</td>
+            <td>2015/02/01 10:00</td>
+            <td>2017/02/01 10:00</td>
+          </tr>
+          <tr>
+            <td>17</td>
+            <td>テスト</td>
+            <td>2015/01</td>
+            <td>100,000</td>
+            <td>0</td>
+            <td>100,000</td>
+            <td>0</td>
+            <td>0</td>
+            <td>2015/02/01 10:00</td>
+            <td>2017/02/01 10:00</td>
+          </tr>
+          <tr>
+            <td>18</td>
+            <td>テスト</td>
+            <td>2015/01</td>
+            <td>100,000</td>
+            <td>0</td>
+            <td>100,000</td>
+            <td>0</td>
+            <td>0</td>
+            <td>2015/02/01 10:00</td>
+            <td>2017/02/01 10:00</td>
+          </tr>
+          <tr>
+            <td>19</td>
+            <td>テスト</td>
+            <td>2015/01</td>
+            <td>100,000</td>
+            <td>0</td>
+            <td>100,000</td>
+            <td>0</td>
+            <td>0</td>
+            <td>2015/02/01 10:00</td>
+            <td>2017/02/01 10:00</td>
+          </tr>
+          <tr>
+            <td>20</td>
+            <td>テスト</td>
+            <td>2015/01</td>
+            <td>100,000</td>
+            <td>0</td>
+            <td>100,000</td>
+            <td>0</td>
+            <td>0</td>
+            <td>2015/02/01 10:00</td>
+            <td>2017/02/01 10:00</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    
+    <!-- ページネーション -->
+	  <div>
+		    <ul class="pagination justify-content-center">
+		      <!-- 戻るボタン
+		      <li class="page-item">
+		        <a class="page-link" href="#" aria-label="Previous">
+		          <span aria-hidden="true">Prev</span>
+		        </a>
+		      </li>
+		      -->
+		      <li class="page-item active"><a class="page-link" href="#">1</a></li>
+	   	    <li class="page-item"><a class="page-link" href="#">2</a></li>
+		      <li class="page-item"><a class="page-link" href="#">3</a></li>
+		      <li class="page-item"><a class="page-link" href="#">4</a></li>
+		      <li class="page-item"><a class="page-link" href="#">5</a></li>
+		      <li class="page-item"><a class="page-link" href="#">6</a></li>
+		      <li class="page-item"><a class="page-link" href="#">7</a></li>
+		      <li class="page-item"><a class="page-link" href="#">8</a></li>
+		      <li class="page-item"><a class="page-link" href="#">9</a></li>
+		      <li class="page-item"><a class="page-link" href="#">10</a></li>
+		      <li class="page-item">
+		        <a class="page-link" href="#" aria-label="Next">
+		          <span aria-hidden="true">Next</span>
+		        </a>
+		      </li>
+		    </ul>
+		  </div>
+</main>
+  </div>
+</div>
+
+
+
+<!-- 入金編集ダイアログ -->
+<div class="modal fade" id="payment_amount" tabindex="-1" role="dialog" aria-labelledby="PaymentAmountEditLabel" aria-hidden="true">
+ 	<div class="modal-dialog" role="document">
+   <div class="modal-content">
+     <div class="modal-header">
+       <h5 class="modal-title" id="PaymentAmountEditLabel">入金額編集</h5>
+       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+         <span aria-hidden="true">&times;</span>
+       </button>
+     </div>
+     <div class="modal-body modal-body-admin">
+       <form class="modal-middle">
+         <div class="form-group">
+           <label for="payment_amount">入金額 :</label>
+           <input type="text" class="form-control dialog-input" id="payment_amount" value="30,000" />
+         </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btn-dialog" data-dismiss="modal">キャンセル</button>
+        <button type="button" class="btn btn-primary btn-dialog" data-dismiss="modal" data-toggle="modal" data-target="#payment_amount-check" data-whatever="30000">確認</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 入金編集確認ダイアログ -->
+<div class="modal fade" id="payment_amount-check" tabindex="-1" role="dialog" aria-labelledby="paymentAmountCheckLabel" aria-hidden="true">
+ 	<div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="paymentAmountCheckLabel">この内容でよろしいですか？</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body modal-body-admin">
+        <form class="modal-middle">
+          <div class="form-group">
+            	入金額 : 30,000
+            	<input type="hidden" value="30000" />
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btn-dialog" data-dismiss="modal" data-toggle="modal" data-target="#payment_amount" data-whatever="30000">キャンセル</button>
+        <button type="button" class="btn btn-primary btn-dialog" data-dismiss="modal" data-toggle="modal" data-target="#payment_amount-finish">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+   
+<!-- 入金編集完了ダイアログ -->
+<div class="modal fade" id="payment_amount-finish" tabindex="-1" role="dialog" aria-labelledby="PaymentAmountFinishLabel" aria-hidden="true">
+ 	<div class="modal-dialog" role="document">
+   	<div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="PaymentAmountCheckLabel">保存完了</h5>
+      </div>
+     	<div class="modal-body modal-body-admin">
+     		<span class="modal-middle">保存しました。</span>
+     	</div>
+     	<div class="modal-footer">
+     		<button type="button" class="btn btn-primary btn-dialog" data-dismiss="modal">OK</button>
+     	</div>
+  	</div>
+ 	</div>
+</div>
+
+</body>
+</html>

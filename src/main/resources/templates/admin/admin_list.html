@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html xmlns="http://thymeleaf.org">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>入金管理システム</title>
+	<link rel="stylesheet" href="/css/bootstrap.css" />
+	<link rel="stylesheet" href="/css/layout.css" />
+	<link rel="stylesheet" href="/css/style.css" />
+	
+	<script src="/js/jquery-3.1.1.js"></script>
+	<script src="/js/tether.js"></script>
+	<script src="/js/bootstrap.js"></script>
+	<script src="/js/table_size.js"></script>
+</head>
+
+<body>
+<!-- タイトルバー -->
+<nav class="navbar navbar-toggleable-md navbar-inverse fixed-top bg-inverse">
+  <button class="navbar-toggler navbar-toggler-right hidden-lg-up" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <a class="navbar-brand" href="/">入金管理システム</a>
+
+  <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+		<a class="user-address" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">ログイン中　：　abc@defghij.jp</a>
+		<div class="dropdown-menu">
+		  <a class="dropdown-item" href="#">ログアウト</a>
+		</div>
+  </div>
+</nav>
+
+<!-- コンテンツ -->
+<div class="container-fluid">
+  <div class="row">
+  <!-- サイドメニュー -->
+    <nav class="col-sm-3 col-md-2 hidden-xs-down bg-faded sidebar">
+      <ul class="nav nav-pills flex-column">
+        <li class="nav-item">
+          <a class="nav-link" href="/">顧客データ</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/payment/payment_list.html">入金データ</a>
+        </li>
+      </ul>
+
+      <ul class="nav nav-pills flex-column">
+        <li class="nav-item">
+          <a class="nav-link active" href="/admin/admin_list.html">管理者データ<span class="sr-only">(current)</span></a>
+        </li>
+      </ul>
+    </nav>
+    
+    
+<!-- メインコンテンツ -->
+<main class="col-sm-9 offset-sm-3 col-md-10 offset-md-2 pt-3">
+<!-- 検索エリア -->
+    <h5>管理者データ</h5>
+    <div class="row btn-right">
+		  <input type="search" list="mail_address" class="form-control" style="width: inherit; margin-bottom: 2px;" name="mail_address" placeholder="メールアドレス検索" />
+		  <datalist id="mail_address">
+				<option value="abc@defghij.jp">
+				<option value="001@wiz-net.jp">
+				<option value="002@wiz-net.jp">
+			</datalist>
+		  <button class="btn btn-primary btn-margin-left btn-margin-bottom" style="margin-right: 22px;">検索</button>
+    	<button class="btn btn-success btn-margin-left btn-margin-bottom margin-right" data-toggle="modal" data-target="#admin-entry">新規登録</button>
+		</div>
+    
+<!-- テーブル -->
+      <div class="table-cover admin-table">
+        <table class="table table-striped table-bordered table-sm table-hover">
+          <thead>
+            <tr>
+              <th>メールアドレス</th>
+              <th>登録日時</th>
+              <th>更新日時</th>
+              <th class="width-150">編集</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>abc@defghij.jp</td>
+              <td>2010/04/01 10:00</td>
+              <td>2016/12/20 16:00</td>
+              <td>
+              	<a href="#" data-toggle="modal" data-target="#admin-edit" data-whatever="1">編集</a>&emsp;
+              	<a href="#" data-toggle="modal" data-target="#admin-delete-check" data-whatever="1">削除</a>
+              </td>
+            </tr>
+            <tr>
+              <td>001@wiz-net.jp</td>
+              <td>2000/04/01 10:00</td>
+              <td>2000/12/20 16:00</td>
+              <td>編集&emsp;削除</td>
+            </tr>
+            <tr>
+              <td>002@wiz-net.jp</td>
+              <td>2000/04/01 10:00</td>
+              <td>2000/12/20 16:00</td>
+              <td>編集&emsp;削除</td>
+            </tr>
+            <tr>
+              <td>003@wiz-net.jp</td>
+              <td>2000/04/01 10:00</td>
+              <td>2000/12/20 16:00</td>
+              <td>編集&emsp;削除</td>
+            </tr>
+            <tr>
+              <td>003@wiz-net.jp</td>
+              <td>2000/04/01 10:00</td>
+              <td>2000/12/20 16:00</td>
+              <td>編集&emsp;削除</td>
+            </tr>
+            <tr>
+              <td>004@wiz-net.jp</td>
+              <td>2000/04/01 10:00</td>
+              <td>2000/12/20 16:00</td>
+              <td>編集&emsp;削除</td>
+            </tr>
+            <tr>
+              <td>005@wiz-net.jp</td>
+              <td>2000/04/01 10:00</td>
+              <td>2000/12/20 16:00</td>
+              <td>編集&emsp;削除</td>
+            </tr>
+            <tr>
+              <td>006@wiz-net.jp</td>
+              <td>2000/04/01 10:00</td>
+              <td>2000/12/20 16:00</td>
+              <td>編集&emsp;削除</td>
+            </tr>
+            <tr>
+              <td>007@wiz-net.jp</td>
+              <td>2000/04/01 10:00</td>
+              <td>2000/12/20 16:00</td>
+              <td>編集&emsp;削除</td>
+            </tr>
+            <tr>
+              <td>008@wiz-net.jp</td>
+              <td>2000/04/01 10:00</td>
+              <td>2000/12/20 16:00</td>
+              <td>編集&emsp;削除</td>
+            </tr>
+            <tr>
+              <td>009@wiz-net.jp</td>
+              <td>2000/04/01 10:00</td>
+              <td>2000/12/20 16:00</td>
+              <td>編集&emsp;削除</td>
+            </tr>
+            <tr>
+              <td>010@wiz-net.jp</td>
+              <td>2000/04/01 10:00</td>
+              <td>2000/12/20 16:00</td>
+              <td>編集&emsp;削除</td>
+            </tr>
+            <tr>
+              <td>011@wiz-net.jp</td>
+              <td>2000/04/01 10:00</td>
+              <td>2000/12/20 16:00</td>
+              <td>編集&emsp;削除</td>
+            </tr>
+            <tr>
+              <td>012@wiz-net.jp</td>
+              <td>2000/04/01 10:00</td>
+              <td>2000/12/20 16:00</td>
+              <td>編集&emsp;削除</td>
+            </tr>
+            <tr>
+              <td>013@wiz-net.jp</td>
+              <td>2000/04/01 10:00</td>
+              <td>2000/12/20 16:00</td>
+              <td>編集&emsp;削除</td>
+            </tr>
+            <tr>
+              <td>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx@wiz-net.jp</td>
+              <td>2000/04/01 10:00</td>
+              <td>2000/12/20 16:00</td>
+              <td>編集&emsp;削除</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    <!-- ページネーション -->
+    <div>
+		    <ul class="pagination justify-content-center">
+		      <!-- 戻るボタン
+		      <li class="page-item">
+		        <a class="page-link" href="#" aria-label="Previous">
+		          <span aria-hidden="true">Prev</span>
+		        </a>
+		      </li>
+		      -->
+		      <li class="page-item active"><a class="page-link" href="#">1</a></li>
+	   	    <li class="page-item"><a class="page-link" href="#">2</a></li>
+		      <li class="page-item"><a class="page-link" href="#">3</a></li>
+		      <li class="page-item"><a class="page-link" href="#">4</a></li>
+		      <li class="page-item"><a class="page-link" href="#">5</a></li>
+		      <li class="page-item"><a class="page-link" href="#">6</a></li>
+		      <li class="page-item"><a class="page-link" href="#">7</a></li>
+		      <li class="page-item"><a class="page-link" href="#">8</a></li>
+		      <li class="page-item"><a class="page-link" href="#">9</a></li>
+		      <li class="page-item"><a class="page-link" href="#">10</a></li>
+		      <li class="page-item">
+		        <a class="page-link" href="#" aria-label="Next">
+		          <span aria-hidden="true">Next</span>
+		        </a>
+		      </li>
+		    </ul>
+		  </div>
+</main>
+  </div>
+</div>
+
+
+
+<!-- 登録ダイアログ -->
+<div class="modal fade" id="admin-entry" tabindex="-1" role="dialog" aria-labelledby="adminEntryLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="adminEntryLabel">管理者の新規登録</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body modal-body-admin">
+        <form class="modal-middle">
+			  <div class="form-group">
+			    <label for="entry-mail_address">メールアドレス</label>
+			    <input type="email" class="form-control" id="entry-mail_address" aria-describedby="emailHelp" />
+			  </div>
+			  <div class="form-group">
+			    <label for="entry-password">パスワード</label>
+			    <input type="password" class="form-control" id="entry-password" />
+			  </div>
+			  </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btn-dialog" data-dismiss="modal">キャンセル</button>
+        <button type="button" class="btn btn-primary btn-dialog" data-dismiss="modal" data-toggle="modal" data-target="#admin-entry-edit-check">確認</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 編集ダイアログ -->
+<div class="modal fade" id="admin-edit" tabindex="-1" role="dialog" aria-labelledby="adminEditLabel" aria-hidden="true">
+ 	<div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="adminEditLabel">管理者の編集</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body modal-body-admin">
+        <form class="modal-middle">
+			  <div class="form-group">
+			    <label for="exampleInputEmail1">メールアドレス</label>
+			    <input type="email" class="form-control" id="edit-mail_address" aria-describedby="emailHelp" value="abc@defghij.jp" />
+			  </div>
+			  <div class="form-group">
+			    <label for="exampleInputPassword1">パスワード</label>
+			    <input type="password" class="form-control" id="edit-password" value="aaaaaaaa">
+			  </div>
+			  </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btn-dialog" data-dismiss="modal">キャンセル</button>
+        <button type="button" class="btn btn-primary btn-dialog" data-dismiss="modal" data-toggle="modal" data-target="#admin-entry-edit-check">確認</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 登録・編集確認ダイアログ -->
+<div class="modal fade" id="admin-entry-edit-check" tabindex="-1" role="dialog" aria-labelledby="adminEntryEditCheckLabel" aria-hidden="true">
+ 	<div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="adminEntryEditChecklabel">この内容でよろしいですか？</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body modal-body-admin">
+        <form class="modal-middle">
+          <div class="form-group">
+            	メールアドレス : abc@defghij.jp
+            	<input type="hidden" value="abc@defghij.jp">
+          </div>
+          <div class="form-group">
+            	パスワード : （表示されません）
+            	<input type="hidden" value="aaaaaaaa">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btn-dialog" data-dismiss="modal" data-toggle="modal" data-target="#admin-edit" data-whatever="30000">キャンセル</button>
+        <button type="button" class="btn btn-primary btn-dialog" data-dismiss="modal" data-toggle="modal" data-target="#admin-entry-edit-finish">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+   
+<!-- 登録・編集完了ダイアログ -->
+<div class="modal fade" id="admin-entry-edit-finish" tabindex="-1" role="dialog" aria-labelledby="adminEntryEditFinishLabel" aria-hidden="true">
+ 	<div class="modal-dialog" role="document">
+   	<div class="modal-content">
+   		<div class="modal-header">
+   			<h5 class="modal-title" id="adminEntryEditFinishLabel">保存完了</h5>
+   		</div>
+     	<div class="modal-body modal-body-admin">
+     		<span class="modal-middle">保存しました。</span>
+     	</div>
+     	<div class="modal-footer">
+     		<button type="button" class="btn btn-primary btn-dialog" data-dismiss="modal">OK</button>
+     	</div>
+  	</div>
+ 	</div>
+</div>
+
+
+<!-- 削除確認ダイアログ -->
+<div class="modal fade" id="admin-delete-check" tabindex="-1" role="dialog" aria-labelledby="adminDeleteChecklLabel" aria-hidden="true">
+ 	<div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="adminDeleteCheckLabel">削除してよろしいですか？</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body modal-body-admin">
+        <form class="modal-middle">
+          <div class="form-group">
+            	メールアドレス : abc@defghij.jp
+            	<input type="hidden" value="abc@defghi.jp">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btn-dialog" data-dismiss="modal">キャンセル</button>
+        <button type="button" class="btn btn-primary btn-dialog" data-dismiss="modal" data-toggle="modal" data-target="#admin-delete-finish">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 削除完了ダイアログ -->
+<div class="modal fade" id="admin-delete-finish" tabindex="-1" role="dialog" aria-labelledby="adminDeleteFinishLabel" aria-hidden="true">
+ 	<div class="modal-dialog" role="document">
+   	<div class="modal-content">
+   		<div class="modal-header">
+   			<h5 class="modal-title" id="adminDeleteFinishLabel">削除完了</h5>
+   		</div>
+     	<div class="modal-body modal-body-admin">
+     		<span class="modal-middle">削除しました。</span>
+     	</div>
+     	<div class="modal-footer">
+     		<button type="button" class="btn btn-primary btn-dialog" data-dismiss="modal">OK</button>
+     	</div>
+  	</div>
+ 	</div>
+</div>
+
+
+</body>
+</html>
