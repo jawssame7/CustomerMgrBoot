@@ -123,9 +123,10 @@
 						<div class="form-group-sm row">
 						  <label for="address1" class="col-2 col-form-label">住所1</label>
 						  <div class="col-2">
-						    <select id="address1" class="search-select" th:each="area: ${area_list}">
+						    <select id="address1" class="search-select">
 						    	<option selected="selected">都道府県選択</option>
-						    	<option th:text="${area.city}">北海道</option>
+						    	<option th:each="area: ${area_list}" th:text="${area.state}">北海道</option>
+						    	<!-- <option th:text="${area.city}"></option> -->
 						    </select>
 						  </div>
 						  <div class="col-1"></div>
