@@ -1,10 +1,13 @@
 package com.kinoshita.springboot;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.kinoshita.springboot.repository.AreaRepository;
@@ -27,27 +30,40 @@ public class ViewController {
 	 * @return
 	 */
 	@RequestMapping("/")
-	public ModelAndView index() {
-		ModelAndView mav = new ModelAndView("/customer/customer_list");
+	public ModelAndView index(ModelAndView mav) {
+		mav.setViewName("/customer/search");
 		
-		// repositoryで全取得 落ちないけど読み込まれない
-//		Iterable<Area> stateList =  areaRepository.findAll();
-//		mav.addObject("area_list", stateList);
+		// repositoryから都道府県を取得
+		List<String> stateList =  areaRepository.getStates();
 		
-		// repositoryで単体取得 表示された
-//		Area area = areaRepository.findOne(1L);
-//		mav.addObject("area", area);
-		
-		// repositoryでdistinct 落ちる
-//		List<String> stateList =  areaRepository.findDistinctStateAll();
-//		mav.addObject("area_list", stateList);
-		
-		// serviceでdistinct　表示されたけど重複まで全部表示された すごくおもい
-		Iterable<Area> stateList = areaService.getState();
+		// 検索条件セレクトボックスに都道府県を格納
 		mav.addObject("area_list", stateList);
 		
+		// 顧客全取得
 		Iterable<Customer> customerList = customerRepository.findAll();
-		mav.addObject("customer_list", customerList);
+		
+		List<StringControl> convertCustomerList = new ArrayList<StringControl>();
+		for (Customer customer: customerList) {
+			StringControl convertCustomer = new StringControl();
+			convertCustomer.setCustomer(customer);
+			
+			// 郵便番号にハイフンを挿入
+			if (customer.getPostal_code() != null) {
+				convertCustomer.postal_codeConvert(customer.getPostal_code());
+			}
+			// 税区分を番号に合った方法の文字列に変換
+			convertCustomer.tax_typeConvert(customer.getTax_type());
+			// 丸め方法を番号に合った方法の文字列に変換
+			convertCustomer.rounding_typeConvert(customer.getRounding_type());
+			// 登録日時をyyyy年MM月dd日 hh時mm分のフォーマットに変換
+			convertCustomer.createdConvert(customer.getCreated());
+			// 更新日時をyyyy年MM月dd日 hh時mm分のフォーマットに変換
+			convertCustomer.updatedConvert(customer.getUpdated());
+			convertCustomerList.add(convertCustomer);
+		} 
+		
+		// ビューに顧客リストを反映
+		mav.addObject("customer_list", convertCustomerList);
 		
 		return mav;
 	}
@@ -57,8 +73,9 @@ public class ViewController {
 	 * @return
 	 */
 	@RequestMapping("/customer/search")
-	public ModelAndView customerSearch() {
-		return new ModelAndView("/customer/customer_list");
+	public ModelAndView customerSearch(ModelAndView mav) {
+		mav.setViewName("/customer/customer_list");
+		return mav;
 	}
 	
 	/**
@@ -66,8 +83,9 @@ public class ViewController {
 	 * @return
 	 */
 	@RequestMapping("/customer/entry")
-	public ModelAndView customerCreate() {
-		return new ModelAndView("/customer/entry");
+	public ModelAndView customerCreate(ModelAndView mav) {
+		mav.setViewName("/customer/entry");
+		return mav;
 	}
 	
 	/**
@@ -75,8 +93,9 @@ public class ViewController {
 	 * @return
 	 */
 	@RequestMapping("/customer/edit")
-	public ModelAndView customerUpdate() {
-		return new ModelAndView("/customer/edit");
+	public ModelAndView customerUpdate(ModelAndView mav) {
+		mav.setViewName("/customer/edit");
+		return mav;
 	}
 	
 	/**
@@ -84,17 +103,41 @@ public class ViewController {
 	 * @return
 	 */
 	@RequestMapping("/customer/check")
-	public ModelAndView customerCheck() {
-		return new ModelAndView("/customer/check");
+	public ModelAndView customerCheck(ModelAndView mav) {
+		mav.setViewName("/customer/check");
+		return mav;
 	}
 	
 	/**
 	 * 顧客詳細
 	 * @return
 	 */
-	@RequestMapping("/customer/detail")
-	public ModelAndView customerDetail() {
-		return new ModelAndView("/customer/detail");
+	@RequestMapping("/customer/detail/id={id}")
+	public ModelAndView customerDetail(ModelAndView mav, @PathVariable Long id) {
+		mav.setViewName("/customer/detail");
+		
+		// 顧客IDから顧客データを取得
+		Customer customer = customerRepository.findOne(id);
+		
+		StringControl convertCustomer = new StringControl(); 
+		convertCustomer.setCustomer(customer);
+		
+		// 郵便番号にハイフンを挿入
+		if (customer.getPostal_code() != null) {
+			convertCustomer.postal_codeConvert(customer.getPostal_code());
+		}
+		// 税区分を番号に合った方法の文字列に変換
+		convertCustomer.tax_typeConvert(customer.getTax_type());
+		// 丸め方法を番号に合った方法の文字列に変換
+		convertCustomer.rounding_typeConvert(customer.getRounding_type());
+		// 登録日時をyyyy年MM月dd日 hh時mm分のフォーマットに変換
+		convertCustomer.createdConvert(customer.getCreated());
+		// 更新日時をyyyy年MM月dd日 hh時mm分のフォーマットに変換
+		convertCustomer.updatedConvert(customer.getUpdated());
+		
+		// ビューに顧客データを反映
+		mav.addObject("customer", convertCustomer);
+		return mav;
 	}
 	
 	/**
@@ -102,8 +145,9 @@ public class ViewController {
 	 * @return
 	 */
 	@RequestMapping("/payment/search")
-	public ModelAndView paymentSearch() {
-		return new ModelAndView("/payment/payment_list");
+	public ModelAndView paymentSearch(ModelAndView mav) {
+		mav.setViewName("/payment/payment_list");
+		return mav;
 	}
 	
 	/**
@@ -111,7 +155,7 @@ public class ViewController {
 	 * @return
 	 */
 	@RequestMapping("/slip/search")
-	public ModelAndView slipSearch() {
-		return new ModelAndView("/slip/slip_list");
+	public ModelAndView slipSearch(ModelAndView mav) {
+		return mav;
 	}
 }

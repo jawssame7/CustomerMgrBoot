@@ -16,12 +16,7 @@
 	<script type="text/javascript">
 	$(function() {
 	  // 候補リストに表示するデータを配列で準備
-	  var name_list = [
-	    '顧客データ',
-	    '株式会社W・I・Z',
-	    'テストデータ03',
-	    'テストデータ04'
-	  ];
+	  var name_list = /* [[${name_list}]] */
 	  
 	  var kana_list = [
 	    'こきゃくでーた',
@@ -125,8 +120,7 @@
 						  <div class="col-2">
 						    <select id="address1" class="search-select">
 						    	<option selected="selected">都道府県選択</option>
-						    	<option th:each="area: ${area_list}" th:text="${area.state}">北海道</option>
-						    	<!-- <option th:text="${area.city}"></option> -->
+						    	<option th:each="area: ${area_list}" th:text="${area}">北海道</option>
 						    </select>
 						  </div>
 						  <div class="col-1"></div>
@@ -192,18 +186,20 @@
               <td>2017年03月01日 12時00分</td>
             </tr>
             <tr th:each="customer: ${customer_list}">
-              <td th:text="${customer.id}"></td>
-              <td th:text="${customer.name}"></td>
-              <td th:text="${customer.kana}"></td>
+             <th:block th:object="${customer.customer}">
+              <td th:text="*{id}"></td>
+              <td><a th:text="*{name}" th:href="@{'/customer/detail/id=' + *{id}}"></a></td>
+              <td th:text="*{kana}"></td>
               <td th:text="${customer.postal_code}"></td>
-              <td th:text="${customer.address1} + ${customer.address2}"></td>
-              <td th:text="${customer.tel}"></td>
-              <td th:text="${customer.fax}"></td>
+              <td th:text="*{address1} + *{address2}"></td>
+              <td th:text="*{tel}"></td>
+              <td th:text="*{fax}"></td>
               <td th:text="${customer.tax_type}"></td>
               <td th:text="${customer.rounding_type}"></td>
-              <td th:text="${customer.closing_day}"></td>
+              <td th:text="*{closing_day} + '日'"></td>
               <td th:text="${customer.created}"></td>
               <td th:text="${customer.updated}"></td>
+             </th:block>
             </tr>
           </tbody>
         </table>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://thymeleaf.org">
+<html xmlns:th="http://thymeleaf.org">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<title>入金管理システム</title>
@@ -60,54 +60,54 @@
     <button type="button" class="btn btn-success btn-right btn-margin-left" onclick="location.href='/customer/edit'">編集</button>
     <div class="table">
       <table class="table table-bordered table-sm table-hover table-list">
-      	<tbody>
+      	<tbody th:object="${customer}">
           <tr>
             <th>ID</th>
-            <td>1</td>
+            <td th:text="*{customer.id}">1</td>
           </tr>
           <tr>
           	<th>名称</th>
-            <td>顧客データ</td>
+            <td th:text="*{customer.name}">顧客データ</td>
           </tr>
           <tr>
          		<th>かな</th> 
-            <td>こきゃくでーた</td>
+            <td th:text="*{customer.kana}">こきゃくでーた</td>
           </tr>
           <tr>
           	<th>郵便番号</th>
-            <td>000-0000</td>
+            <td th:text="*{postal_code}">000-0000</td>
           </tr>
           <tr>
           	<th>住所</th>
-            <td>鹿児島県鹿児島市星ヶ峯1-1-1</td>
+            <td th:text="*{customer.address1} + *{customer.address2}">鹿児島県鹿児島市星ヶ峯1-1-1</td>
           </tr>
           <tr>
             <th>電話番号</th>
-            <td>00000000000</td>
+            <td th:text="*{customer.tel}">00000000000</td>
           </tr>
           <tr>
             <th>FAX番号</th>
-            <td>00000000000</td>
+            <td th:text="*{customer.fax}">00000000000</td>
           </tr>
           <tr>
             <th>税区分</th>
-            <td>1 : 切捨て</td>
+            <td th:text="*{tax_type}">1 : 切捨て</td>
           </tr>
           <tr>
             <th>丸め方法</th>
-            <td>1 : 明細行</td>
+            <td th:text="*{rounding_type}">1 : 明細行</td>
           </tr>
           <tr>
             <th>締め日</th>
-            <td>5日</td>
+            <td th:text="*{customer.closing_day} + '日'">5日</td>
           </tr>
           <tr>
             <th>登録日時</th>
-            <td>2017年01月07日 13時00分</td>
+            <td th:text="*{created}">2017年01月07日 13時00分</td>
           </tr>
           <tr>
             <th>更新日時</th>
-            <td>2017年03月01日 12時00分</td>
+            <td th:text="*{updated}">2017年03月01日 12時00分</td>
           </tr>
         </tbody>
       </table>
