@@ -5,8 +5,11 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -17,21 +20,33 @@ import com.kinoshita.springboot.repository.CustomerRepository;
 public class ViewController {
 
 	@Autowired
-	AreaRepository areaRepository;
+	CustomerRepository customerRepository;
+	@Autowired
+	CustomerService customerService;
 	
+	@Autowired
+	AreaRepository areaRepository;
 	@Autowired
 	AreaService areaService;
-	
-	@Autowired
-	CustomerRepository customerRepository;
+
 	
 	/**
-	 * ログイン後初期表示
+	 * ログイン後顧客検索ページへ
 	 * @return
 	 */
 	@RequestMapping("/")
-	public ModelAndView index(ModelAndView mav) {
-		mav.setViewName("/customer/search");
+	public String index() {
+		return "forward:/customer/search";
+	}
+	
+	/**
+	 * 顧客検索初期表示
+	 * @param mav
+	 * @return
+	 */
+	@RequestMapping("/customer/search")
+	public ModelAndView customerSearch(ModelAndView mav) {
+		mav.setViewName("/customer/customer_list");
 		
 		// repositoryから都道府県を取得
 		List<String> stateList =  areaRepository.getStates();
@@ -40,7 +55,7 @@ public class ViewController {
 		mav.addObject("area_list", stateList);
 		
 		// 顧客全取得
-		Iterable<Customer> customerList = customerRepository.findAll();
+		Iterable<Customer> customerList = customerRepository.findByDeletedIsNull();
 		
 		List<StringControl> convertCustomerList = new ArrayList<StringControl>();
 		for (Customer customer: customerList) {
@@ -51,6 +66,10 @@ public class ViewController {
 			if (customer.getPostal_code() != null) {
 				convertCustomer.postal_codeConvert(customer.getPostal_code());
 			}
+			// 住所1がnullの場合文字列なし（""）に変更
+			convertCustomer.address1Convert(customer.getAddress1());
+			// 住所2がnullの場合文字列なし（""）二変更
+			convertCustomer.address2Convert(customer.getAddress2());
 			// 税区分を番号に合った方法の文字列に変換
 			convertCustomer.tax_typeConvert(customer.getTax_type());
 			// 丸め方法を番号に合った方法の文字列に変換
@@ -69,12 +88,67 @@ public class ViewController {
 	}
 	
 	/**
+	 * 名称サジェスト
+	 * @param name
+	 * @return
+	 */
+	@RequestMapping(value = "/name/search", method = RequestMethod.GET)
+	@ResponseBody
+	public List<String> nameSuggest(String name) {
+		List<String> nameList = customerRepository.suggestName(name);
+		
+		return nameList;
+	}
+	
+	/**
 	 * 顧客検索
 	 * @return
 	 */
-	@RequestMapping("/customer/search")
-	public ModelAndView customerSearch(ModelAndView mav) {
+	@RequestMapping(value = "/customer/search/", produces="text/plain;charset=UTF-8")
+	public ModelAndView customerSearch(@RequestParam String name, @RequestParam String kana, 
+			@RequestParam String postal_code, @RequestParam String address1, 
+			@RequestParam String address2, @RequestParam String tel, 
+			@RequestParam String fax, ModelAndView mav) {
 		mav.setViewName("/customer/customer_list");
+		
+		// repositoryから都道府県を取得
+		List<String> stateList =  areaRepository.getStates();
+		
+		// 検索条件セレクトボックスに都道府県を格納
+		mav.addObject("area_list", stateList);
+		
+		// serviceから検索結果を取得
+		List<Customer> result = customerService.findCustomers(name, kana, postal_code, address1, address2, tel, fax);
+		
+		System.out.println(result.size());
+		
+		List<StringControl> convertCustomerList = new ArrayList<StringControl>();
+		for (Customer customer: result) {
+			StringControl convertCustomer = new StringControl();
+			convertCustomer.setCustomer(customer);
+			
+			// 郵便番号にハイフンを挿入
+			if (customer.getPostal_code() != null) {
+				convertCustomer.postal_codeConvert(customer.getPostal_code());
+			}
+			// 住所1がnullの場合文字列なし（""）に変更
+			convertCustomer.address1Convert(customer.getAddress1());
+			// 住所2がnullの場合文字列なし（""）二変更
+			convertCustomer.address2Convert(customer.getAddress2());
+			// 税区分を番号に合った方法の文字列に変換
+			convertCustomer.tax_typeConvert(customer.getTax_type());
+			// 丸め方法を番号に合った方法の文字列に変換
+			convertCustomer.rounding_typeConvert(customer.getRounding_type());
+			// 登録日時をyyyy年MM月dd日 hh時mm分のフォーマットに変換
+			convertCustomer.createdConvert(customer.getCreated());
+			// 更新日時をyyyy年MM月dd日 hh時mm分のフォーマットに変換
+			convertCustomer.updatedConvert(customer.getUpdated());
+			convertCustomerList.add(convertCustomer);
+		} 
+		
+		// ビューに検索結果を反映
+		mav.addObject("customer_list", convertCustomerList);
+		
 		return mav;
 	}
 	
@@ -85,6 +159,12 @@ public class ViewController {
 	@RequestMapping("/customer/entry")
 	public ModelAndView customerCreate(ModelAndView mav) {
 		mav.setViewName("/customer/entry");
+		
+		// repositoryから都道府県を取得
+		List<String> stateList =  areaRepository.getStates();
+		
+		// 検索条件セレクトボックスに都道府県を格納
+		mav.addObject("area_list", stateList);
 		return mav;
 	}
 	
@@ -99,11 +179,11 @@ public class ViewController {
 	}
 	
 	/**
-	 * 顧客登録・編集確認
+	 * 顧客（登録・編集）確認
 	 * @return
 	 */
-	@RequestMapping("/customer/check")
-	public ModelAndView customerCheck(ModelAndView mav) {
+	@RequestMapping(value = "/customer/check", method = RequestMethod.POST)
+	public ModelAndView customerCheck(@ModelAttribute("customer") Customer customer, ModelAndView mav) {
 		mav.setViewName("/customer/check");
 		return mav;
 	}
@@ -126,6 +206,10 @@ public class ViewController {
 		if (customer.getPostal_code() != null) {
 			convertCustomer.postal_codeConvert(customer.getPostal_code());
 		}
+		// 住所1がnullの場合文字列なし（""）に変更
+		convertCustomer.address1Convert(customer.getAddress1());
+		// 住所2がnullの場合文字列なし（""）二変更
+		convertCustomer.address2Convert(customer.getAddress2());
 		// 税区分を番号に合った方法の文字列に変換
 		convertCustomer.tax_typeConvert(customer.getTax_type());
 		// 丸め方法を番号に合った方法の文字列に変換

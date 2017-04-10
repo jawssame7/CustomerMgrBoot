@@ -16,7 +16,12 @@
 	<script type="text/javascript">
 	$(function() {
 	  // 候補リストに表示するデータを配列で準備
-	  var name_list = /* [[${name_list}]] */
+	  var name_list = [
+	    '顧客データ',
+	    '株式会社W・I・Z',
+	    'テストデータ03',
+	    'テストデータ04'
+	  ];
 	  
 	  var kana_list = [
 	    'こきゃくでーた',
@@ -96,11 +101,11 @@
         
         <div id="collapse" class="collapse show search-list" role="tabpanel" aria-labelledby="heading">
           <div class="card-block-sm">
-          <form id="form-search" class="form-scroll">
+          <form id="form-search" class="form-scroll" action="/customer/search/" method="get">
 						<div class="form-group-sm row">
 						  <label for="name" class="col-2 col-form-label">顧客名称</label>
 						  <div class="col-10">
-						    <input id="customer_name" class="form-control" type="search" name="name" maxlength="40" value="null" th:value="${name}" />
+						    <input id="customer_name" class="form-control" type="search" name="name" maxlength="40" th:value="${name}" />
 						  </div>
 						</div>
 						<div class="form-group-sm row">
@@ -112,37 +117,37 @@
 						<div class="form-group-sm row">
 						  <label for="postal_code" class="col-2 col-form-label">郵便番号<small>&emsp;※半角数字</small></label>
 						  <div class="col-2">
-						    <input id="postal_code" class="form-control" type="search" maxlength="7" th:value="${postal_code}" />
+						    <input id="postal_code" class="form-control" type="search" name="postal_code" maxlength="7" th:value="${postal_code}" />
 						  </div>
 						</div>
 						<div class="form-group-sm row">
 						  <label for="address1" class="col-2 col-form-label">住所1</label>
 						  <div class="col-2">
-						    <select id="address1" class="search-select">
-						    	<option selected="selected">都道府県選択</option>
-						    	<option th:each="area: ${area_list}" th:text="${area}">北海道</option>
+						    <select id="address1" class="search-select" name="address1">
+						    	<option selected="selected" value="">都道府県選択</option>
+						    	<option th:each="area: ${area_list}" th:text="${area}" th:value="${area}"></option>
 						    </select>
 						  </div>
 						  <div class="col-1"></div>
 						  <label for="address2" class="col-2 col-form-label">住所2</label>
 						  <div class="col-5">
-						    <input id="address2" class="form-control" type="search" maxlength="40" th:value="${address2}" />
+						    <input id="address2" class="form-control" type="search" name="address2" maxlength="40" th:value="${address2}" />
 						  </div>
 						</div>
 						<div class="form-group-sm row">
 						  <label for="tel" class="col-2 col-form-label">電話番号<small>&emsp;※半角数字</small></label>
 						  <div class="col-2">
-						    <input id="tel" class="form-control" type="search" maxlength="14" th:value="${tel}" />
+						    <input id="tel" class="form-control" type="search" name="tel" maxlength="14" th:value="${tel}" />
 						  </div>
 						  <div class="col-1"></div>
 						  <label for="fax" class="col-2 col-form-label">FAX番号<small>&emsp;※半角数字</small></label>
 						  <div class="col-2">
-						    <input id="fax" class="form-control" type="search" maxlength="14" th:value="${fax}" />
+						    <input id="fax" class="form-control" type="search" name="fax" maxlength="14" th:value="${fax}" />
 						  </div>
 						</div>
 					</form>
 					<hr />
-          <button type="button" class="btn btn-primary btn-right btn-margin-left" onclick="location.href='/customer/search'">検　索</button>
+          <button type="submit" form="form-search" class="btn btn-primary btn-right btn-margin-left">検　索</button>
           <input type="reset" form="form-search" value="検索条件リセット" class="btn btn-secondary btn-search btn-right" />
           </div>
         </div>
@@ -191,7 +196,7 @@
               <td><a th:text="*{name}" th:href="@{'/customer/detail/id=' + *{id}}"></a></td>
               <td th:text="*{kana}"></td>
               <td th:text="${customer.postal_code}"></td>
-              <td th:text="*{address1} + *{address2}"></td>
+              <td th:text="${customer.address1} + ${customer.address2}"></td>
               <td th:text="*{tel}"></td>
               <td th:text="*{fax}"></td>
               <td th:text="${customer.tax_type}"></td>

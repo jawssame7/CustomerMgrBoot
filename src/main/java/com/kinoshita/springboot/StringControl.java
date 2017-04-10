@@ -7,6 +7,8 @@ public class StringControl {
 	
 	private Customer customer;
 	private String postal_code;
+	private String address1;
+	private String address2;
 	private String tax_type;
 	private String rounding_type;
 	private String created;
@@ -20,6 +22,28 @@ public class StringControl {
 		StringBuffer postal_codeSb = new StringBuffer(originPostal_code);
 		postal_codeSb.insert(3, "-");
 		postal_code = new String(postal_codeSb);
+	}
+	
+	/**
+	 * 住所1　nullの場合文字列なし（""）に変更
+	 * @param originAddress1
+	 */
+	public void address1Convert (String originAddress1) {
+		if (originAddress1 == null) {
+			originAddress1 = "";
+		}
+		address1 = originAddress1;
+	}
+	
+	/**
+	 * 住所2　nullの場合文字列なし（""）に変更
+	 * @param originAddress1
+	 */
+	public void address2Convert (String originAddress2) {
+		if (originAddress2 == null) {
+			originAddress2 = "";
+		}
+		address2 = originAddress2;
 	}
 	
 	/**
@@ -96,6 +120,14 @@ public class StringControl {
 	
 	public String getPostal_code() {
 		return postal_code;
+	}
+	
+	public String getAddress1() {
+		return address1;
+	}
+
+	public String getAddress2() {
+		return address2;
 	}
 
 	public String getTax_type() {
