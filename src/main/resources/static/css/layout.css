@@ -62,9 +62,7 @@ body {
 }
 /* アコーディオンボディ */
 .card-block-sm {
-	overflow-y: scroll;
 	padding: 8px 20px;
-	height: 180px;
 }
 .card-block-sm-index {
 	padding: 8px 20px;

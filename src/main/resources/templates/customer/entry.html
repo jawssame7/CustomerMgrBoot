@@ -63,44 +63,44 @@
       	<tbody>
           <tr>
           	<th>名称</th>
-            <td><input class="width-650" type="text" form="entry" th:field="*{name}" maxlength="40" />
+            <td><input class="width-650" type="text" form="entry" name="name" maxlength="40" />
             <span style="visibility : hidden; color: red; margin-left: 10px;">必須項目です。</span></td>
           </tr>
           <tr>
          		<th>かな</th>
-            <td><input class="width-650" type="text" form="entry" th:field="*{kana}" />
+            <td><input class="width-650" type="text" form="entry" name="kana" />
             <span style="visibility : hidden; color: red; margin-left: 10px;">必須項目です。</span></td>
           </tr>
           <tr>
           	<th>郵便番号<small>&emsp;※半角数字</small></th>
-            <td><input class="width-100" type="text" form="entry" th:field="*{postal_code}" maxlength="7" />
+            <td><input class="width-100" type="text" form="entry" name="postal_code" maxlength="7" />
             <button class="btn auto-insert">住所自動入力</button>
             <span style="visibility : hidden; color: red; margin-left: 10px;">正しい郵便番号を入力してください。</span></td>
           </tr>
           <tr>
           	<th>住所1</th>
-            <td><select form="entry" class="table-form-select" th:field="*{address1}">
+            <td><select form="entry" class="table-form-select" name="address1">
 				    	<option selected="selected">都道府県選択</option>
-				    	<option th:each="area: ${area_list}" th:text="${area}" th:value="*${area}"></option>
+				    	<option th:each="area: ${area_list}" th:text="${area}" th:value="${area}"></option>
 						</select></td>
           </tr>
           <tr>
             <th>住所2</th>
-            <td><input class="input-width-max" type="text" form="entry" th:field="*{address2}" maxlength="100" /></td>
+            <td><input class="input-width-max" type="text" form="entry" name="address2" maxlength="100" /></td>
           </tr>
           <tr>
             <th>電話番号<small>&emsp;※半角数字</small></th>
-            <td><input class="width-150" type="text" form="entry" th:field="*{tel}" maxlength="14" />
+            <td><input class="width-150" type="text" form="entry" name="tel" maxlength="14" />
 						<span style="visibility : hidden; color: red; margin-left: 10px;">正しい電話番号を入力してください。</span></td>
           </tr>
           <tr>
             <th>FAX番号<small>&emsp;※半角数字</small></th>
-            <td><input class="width-150" type="text" form="entry" th:field="*{fax}" maxlength="14" />
+            <td><input class="width-150" type="text" form="entry" name="fax" maxlength="14" />
 						<span style="visibility : hidden; color: red; margin-left: 10px;">正しいFAX番号を入力してください。</span></td>
           </tr>
           <tr>
             <th>税区分</th>
-            <td><select form="entry" class="table-form-select" th:field="*{tax_type}">
+            <td><select form="entry" class="table-form-select" name="tax_type">
 				    	<option th:value="1" selected="selected">切捨て</option>
 				    	<option th:value="2">四捨五入</option>
 				    	<option th:value="3">切り上げ</option>
@@ -108,14 +108,14 @@
           </tr>
           <tr>
             <th>丸め方法</th>
-            <td><select form="entry" class="table-form-select" th:field="*{rounding_type}">
+            <td><select form="entry" class="table-form-select" name="rounding_type">
 				    	<option th:value="1" selected="selected">明細行</option>
 				    	<option th:value="2">請求書</option>
 						</select></td>
           </tr>
           <tr>
             <th>締め日</th>
-            <td><select form="entry" class="table-form-select" th:field="*{closing_day}">
+            <td><select form="entry" class="table-form-select" name="closing_day">
 				    	<option th:value="5" selected="selected">5日</option>
 				    	<option th:value="10">10日</option>
 				    	<option th:value="15">15日</option>

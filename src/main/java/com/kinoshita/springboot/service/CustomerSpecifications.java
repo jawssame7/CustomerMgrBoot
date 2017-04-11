@@ -1,4 +1,4 @@
-package com.kinoshita.springboot;
+package com.kinoshita.springboot.service;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -7,6 +7,8 @@ import javax.persistence.criteria.Root;
 
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.util.StringUtils;
+
+import com.kinoshita.springboot.entity.Customer;
 
 public class CustomerSpecifications {
 
@@ -19,7 +21,7 @@ public class CustomerSpecifications {
 		return StringUtils.isEmpty(name) ? null : new Specification<Customer>() {
 			@Override
 			public Predicate toPredicate(Root<Customer> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-				return cb.equal(root.get("name"), name);
+				return cb.like(root.get("name"), "%" + name + "%");
 			}
 		};
 	}
@@ -104,6 +106,19 @@ public class CustomerSpecifications {
 			@Override
 			public Predicate toPredicate(Root<Customer> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				return cb.equal(root.get("fax"), fax);
+			}
+		};
+	}
+	
+	/**
+	 * 未削除（deleted == null）のデータ検索
+	 * @return
+	 */
+	public static Specification<Customer> deletedIsNull() {
+		return new Specification<Customer>() {
+			@Override
+			public Predicate toPredicate(Root<Customer> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+				return cb.isNull(root.get("deleted"));
 			}
 		};
 	}

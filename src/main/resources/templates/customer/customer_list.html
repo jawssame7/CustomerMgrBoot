@@ -13,40 +13,8 @@
 	<script src="/js/tether.js"></script>
 	<script src="/js/bootstrap.js"></script>
 	<script src="/js/table_size.js"></script>
-	<script type="text/javascript">
-	$(function() {
-	  // 候補リストに表示するデータを配列で準備
-	  var name_list = [
-	    '顧客データ',
-	    '株式会社W・I・Z',
-	    'テストデータ03',
-	    'テストデータ04'
-	  ];
-	  
-	  var kana_list = [
-	    'こきゃくでーた',
-	    'かぶしきがいしゃうぃず',
-	    'てすとでーたさん',
-	    'てすとでーたよん'
-	  ];
-	  
-	
-	  // オートコンプリート機能を適用
-	  $('#customer_name').autocomplete({
-	    source: name_list,
-	    autoFocus: true,
-	    delay: 300,
-	    minLength: 2
-	  });
-	  
-	  $('#customer_kana').autocomplete({
-		    source: kana_list,
-		    autoFocus: true,
-		    delay: 300,
-		    minLength: 3
-		  });
-	});
-	</script>
+	<script src="/js/customer.js"></script>
+	<script src="/js/search_url.js"></script>
 </head>
 
 <body>
@@ -101,7 +69,7 @@
         
         <div id="collapse" class="collapse show search-list" role="tabpanel" aria-labelledby="heading">
           <div class="card-block-sm">
-          <form id="form-search" class="form-scroll" action="/customer/search/" method="get">
+          <form id="form-search" class="form-scroll" action="/customer/search/page=1" method="get" th:object="${condition}">
 						<div class="form-group-sm row">
 						  <label for="name" class="col-2 col-form-label">顧客名称</label>
 						  <div class="col-10">
@@ -147,7 +115,7 @@
 						</div>
 					</form>
 					<hr />
-          <button type="submit" form="form-search" class="btn btn-primary btn-right btn-margin-left">検　索</button>
+          <button type="submit" id="searchBtn" form="form-search" class="btn btn-primary btn-right btn-margin-left">検　索</button>
           <input type="reset" form="form-search" value="検索条件リセット" class="btn btn-secondary btn-search btn-right" />
           </div>
         </div>
@@ -176,20 +144,6 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>1</td>
-              <td><a href="/customer/detail">顧客データ</a></td>
-              <td>こきゃくでーた</td>
-              <td>000-0000</td>
-              <td>鹿児島県鹿児島市星ヶ峯1-1-1</td>
-              <td>00000000000</td>
-              <td>00000000000</td>
-              <td>切捨て</td>
-              <td>明細行</td>
-              <td>5日</td>
-              <td>2017年01月07日 13時00分</td>
-              <td>2017年03月01日 12時00分</td>
-            </tr>
             <tr th:each="customer: ${customer_list}">
              <th:block th:object="${customer.customer}">
               <td th:text="*{id}"></td>
@@ -212,27 +166,21 @@
       <!-- ページネーション -->
 	    <div>
 		    <ul class="pagination justify-content-center">
-		      <!-- 戻るボタン
 		      <li class="page-item">
-		        <a class="page-link" href="#" aria-label="Previous">
+		      <!-- 
+		        <a class="page-link" th:href="${#pagination.prevUrl(pagenumber)}" aria-label="Previous">
 		          <span aria-hidden="true">Prev</span>
 		        </a>
+		         -->
 		      </li>
-		      -->
 		      <li class="page-item active"><a class="page-link" href="#">1</a></li>
 	   	    <li class="page-item"><a class="page-link" href="#">2</a></li>
-		      <li class="page-item"><a class="page-link" href="#">3</a></li>
-		      <li class="page-item"><a class="page-link" href="#">4</a></li>
-		      <li class="page-item"><a class="page-link" href="#">5</a></li>
-		      <li class="page-item"><a class="page-link" href="#">6</a></li>
-		      <li class="page-item"><a class="page-link" href="#">7</a></li>
-		      <li class="page-item"><a class="page-link" href="#">8</a></li>
-		      <li class="page-item"><a class="page-link" href="#">9</a></li>
-		      <li class="page-item"><a class="page-link" href="#">10</a></li>
 		      <li class="page-item">
-		        <a class="page-link" href="#" aria-label="Next">
+		      <!-- 
+		        <a class="page-link" th:href="${#pagination.nextUrl(pagenumber)}" aria-label="Next">
 		          <span aria-hidden="true">Next</span>
 		        </a>
+		         -->
 		      </li>
 		    </ul>
 		  </div>

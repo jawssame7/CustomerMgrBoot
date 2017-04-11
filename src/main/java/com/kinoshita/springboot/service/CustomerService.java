@@ -1,14 +1,7 @@
-package com.kinoshita.springboot;
-
-import java.util.ArrayList;
-import java.util.List;
+package com.kinoshita.springboot.service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,6 +9,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.stereotype.Service;
 
+import com.kinoshita.springboot.dto.CustomerSearchConditions;
+import com.kinoshita.springboot.entity.Customer;
 import com.kinoshita.springboot.repository.CustomerRepository;
 
 @Service
@@ -33,17 +28,7 @@ public class CustomerService {
 	private EntityManager entityManager;
 	
 	/**
-	 * ページ番号
-	 * @param pageNumber
-	 * @return
-	 */
-	public Page<Customer> getCustomerInPage(Integer pageNumber) {
-		PageRequest pageRequest = new PageRequest(pageNumber - 1, PAGE_SIZE);
-		return repository.findAll(pageRequest);
-	}
-	
-	/**
-	 * 顧客検索　動的クエリ
+	 * 動的クエリで顧客検索、ページネーション
 	 * @param name
 	 * @param kana
 	 * @param postal_code
@@ -53,17 +38,20 @@ public class CustomerService {
 	 * @param fax
 	 * @return
 	 */
-	public List<Customer> findCustomers(String name, String kana, String postal_code, 
-			String address1, String address2, String tel, String fax) {
-		List<Customer> results = repository.findAll(Specifications
-				.where(CustomerSpecifications.nameContains(name))
-				.and(CustomerSpecifications.kanaContains(kana))
-				.and(CustomerSpecifications.postal_codeContains(postal_code))
-				.and(CustomerSpecifications.address1Contains(address1))
-				.and(CustomerSpecifications.address2Contains(address2))
-				.and(CustomerSpecifications.telContains(tel))
-				.and(CustomerSpecifications.faxContains(fax)));
+	public Page<Customer> findCustomers(CustomerSearchConditions condition, Integer pageNumber) {
+		PageRequest pageRequest = new PageRequest(pageNumber - 1, PAGE_SIZE);
+		Page<Customer> results = repository.findAll(Specifications
+				.where(CustomerSpecifications.nameContains(condition.getName()))
+				.and(CustomerSpecifications.kanaContains(condition.getKana()))
+				.and(CustomerSpecifications.postal_codeContains(condition.getPostal_code()))
+				.and(CustomerSpecifications.address1Contains(condition.getAddress1()))
+				.and(CustomerSpecifications.address2Contains(condition.getAddress2()))
+				.and(CustomerSpecifications.telContains(condition.getTel()))
+				.and(CustomerSpecifications.faxContains(condition.getFax()))
+				.and(CustomerSpecifications.deletedIsNull())
+				, pageRequest);
 		return results;
+		
 	}
 	
 //	public List<Customer> searchCustomers(String name, String kana, String postal_code, 

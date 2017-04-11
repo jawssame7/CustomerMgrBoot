@@ -1,4 +1,4 @@
-package com.kinoshita.springboot;
+package com.kinoshita.springboot.service;
 
 import java.util.List;
 
@@ -9,6 +9,8 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 import org.springframework.stereotype.Service;
+
+import com.kinoshita.springboot.entity.Area;
 
 @Service
 public class AreaService {

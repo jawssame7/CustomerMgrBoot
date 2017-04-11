@@ -8,13 +8,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.kinoshita.springboot.Customer;
+import com.kinoshita.springboot.entity.Customer;
 
 @Repository
 public interface CustomerRepository extends JpaRepository<Customer, Long>, JpaSpecificationExecutor<Customer> {
-
-	// deleted == nullのデータ全取得
-	public List<Customer> findByDeletedIsNull();
 	
 	// 名前サジェスト - 10件
 	@Query(value = "SELECT name FROM customer WHERE name LIKE %:name% LIMIT 10", nativeQuery = true)

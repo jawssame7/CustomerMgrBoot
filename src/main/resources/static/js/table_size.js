@@ -7,12 +7,12 @@ $(window).on('load resize', function(){
 	
 	// 検索エリアあり
 	if ($(".table-responsive").length) {
-		$(".table-responsive").height(window.innerHeight - 400);
+		$(".table-responsive").height(window.innerHeight - 475);
 	}
 		
 	// 検索エリアなし
 	if ($(".table-cover").length) {
-		$(".table-cover").height(window.innerHeight - 164);
+		$(".table-cover").height(window.innerHeight - 163);
 	}
 });
 
@@ -26,7 +26,7 @@ $(function() {
 		
 		if (tableSth) {
 			/* 検索エリアが開いているとき */
-			$(".table-responsive").height(window.innerHeight - 400);
+			$(".table-responsive").height(window.innerHeight - 475);
 			tableSth = false;
 		} else {
 			/* 検索エリアが閉じているとき */
