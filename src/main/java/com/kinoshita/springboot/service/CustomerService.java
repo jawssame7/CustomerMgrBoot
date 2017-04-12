@@ -27,6 +27,11 @@ public class CustomerService {
 	@PersistenceContext
 	private EntityManager entityManager;
 	
+	
+	public static int getPAGE_SIZE() {
+		return PAGE_SIZE;
+	}
+	
 	/**
 	 * 動的クエリで顧客検索、ページネーション
 	 * @param name

@@ -1,22 +1,34 @@
 package com.kinoshita.springboot.utility;
 
-public class PaginationUtility {
+import com.kinoshita.springboot.service.CustomerService;
 
+public class PaginationUtility {
+	
 	/**
-	 * 現在ページからPrevのURLを出す
+	 * 現在ページからPrevのページ数を出す
 	 * @param page
 	 * @return
 	 */
-	public String prevUrl(int page) {
-		return "/page/" + (page > 1 ? page - 1 : 1);
+	public String prev(int page) {
+		return "page=" + (page > 1 ? page - 1 : 1);
 	}
 	
 	/**
-	 * 現在ページからNextのURLを出す
+	 * 現在ページからNextのページ数を出す
 	 * @param page
 	 * @return
 	 */
-	public String nextUrl(int page) {
-		return "/page/" + (page + 1);
+	public String next(int page) {
+		return "page=" + (page + 1);
+	}
+	
+	/**
+	 * 最大ページ数を出す
+	 * @param page
+	 * @param size
+	 * @return
+	 */
+	public String last(int size) {
+		return "page=" + (size / CustomerService.getPAGE_SIZE() + 1);
 	}
 }

@@ -20,6 +20,7 @@ import com.kinoshita.springboot.repository.AreaRepository;
 import com.kinoshita.springboot.repository.CustomerRepository;
 import com.kinoshita.springboot.service.AreaService;
 import com.kinoshita.springboot.service.CustomerService;
+import com.kinoshita.springboot.utility.PaginationUtility;
 
 @Controller
 public class CustomerController {
@@ -34,6 +35,8 @@ public class CustomerController {
 	@Autowired
 	AreaService areaService;
 
+
+	PaginationUtility pagination;
 	
 	/**
 	 * ログイン後顧客検索ページへ
@@ -41,7 +44,7 @@ public class CustomerController {
 	 */
 	@RequestMapping(value = "/")
 	public String index() {
-		return "forward:/customer/search/page=1";
+		return "redirect:/customer/search/page=1";
 	}
 	
 	/**
@@ -57,14 +60,19 @@ public class CustomerController {
 		// 検索条件セレクトボックスに都道府県を格納
 		mav.addObject("area_list", this.getStateList());
 		
-		CustomerSearchConditions condition = new CustomerSearchConditions();
+		// 検索条件null
+		CustomerSearchConditions condition = null;
 		// 顧客全取得
 		List<CustomerDto> customerList = this.customerSearchResult(condition, page);
 		
 		// 顧客リストを反映
 		mav.addObject("customer_list", customerList);
+		
+		String lastPage = pagination.last(customerList.size());
+		
 		// ページネーションを反映
 		mav.addObject("pagenumber", page);
+		mav.addObject("lastPage", lastPage);
 		
 		return mav;
 	}
@@ -83,14 +91,14 @@ public class CustomerController {
 		// 検索条件セレクトボックスに都道府県を格納
 		mav.addObject("area_list", this.getStateList());
 		
-		// 顧客全取得
+		// 顧客検索
 		List<CustomerDto> customerList = this.customerSearchResult(condition, page);
 		
 		// 顧客リストを反映
 		mav.addObject("customer_list", customerList);
 		// ページネーションを反映
 		mav.addObject("pagenumber", page);
-		
+
 		return mav;
 	}
 	
@@ -160,8 +168,7 @@ public class CustomerController {
 		// 顧客IDから顧客データを取得
 		Customer customer = customerRepository.findOne(id);
 		
-		CustomerDto customerDto = new CustomerDto(); 
-		customerDto.convertCustomer(customer);
+		CustomerDto customerDto = new CustomerDto(customer); 
 		
 		// ビューに顧客データを反映
 		mav.addObject("customer", customerDto);
@@ -179,9 +186,8 @@ public class CustomerController {
 		
 		List<CustomerDto> convertCustomerList = new ArrayList<CustomerDto>();
 		for (Customer customer: list) {
-			CustomerDto customerDto = new CustomerDto();
-		
-			customerDto.convertCustomer(customer);
+			CustomerDto customerDto = new CustomerDto(customer);
+			
 			// 文字列変換したデータをリストに格納
 			convertCustomerList.add(customerDto);
 		}

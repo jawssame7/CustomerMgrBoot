@@ -146,18 +146,18 @@
           <tbody>
             <tr th:each="customer: ${customer_list}">
              <th:block th:object="${customer.customer}">
-              <td th:text="*{id}"></td>
-              <td><a th:text="*{name}" th:href="@{'/customer/detail/id=' + *{id}}"></a></td>
-              <td th:text="*{kana}"></td>
-              <td th:text="${customer.postal_code}"></td>
-              <td th:text="${customer.address1} + ${customer.address2}"></td>
-              <td th:text="*{tel}"></td>
-              <td th:text="*{fax}"></td>
-              <td th:text="${customer.tax_type}"></td>
-              <td th:text="${customer.rounding_type}"></td>
-              <td th:text="*{closing_day} + '日'"></td>
-              <td th:text="${customer.created}"></td>
-              <td th:text="${customer.updated}"></td>
+              <td th:text="*{id}">ID</td>
+              <td><a th:text="*{name}" th:href="@{'/customer/detail/id=' + *{id}}">名前</a></td>
+              <td th:text="*{kana}">かな</td>
+              <td th:text="${customer.postal_code}">郵便番号</td>
+              <td th:text="${customer.address1} + ${customer.address2}">住所1 + 住所2</td>
+              <td th:text="*{tel}">電話番号</td>
+              <td th:text="*{fax}">FAX番号</td>
+              <td th:text="${customer.tax_type}">税区分</td>
+              <td th:text="${customer.rounding_type}">丸め方法</td>
+              <td th:text="*{closing_day} + '日'">締め日</td>
+              <td th:text="${customer.created}">登録日時</td>
+              <td th:text="${customer.updated}">更新日時</td>
              </th:block>
             </tr>
           </tbody>
@@ -166,21 +166,25 @@
       <!-- ページネーション -->
 	    <div>
 		    <ul class="pagination justify-content-center">
-		      <li class="page-item">
-		      <!-- 
-		        <a class="page-link" th:href="${#pagination.prevUrl(pagenumber)}" aria-label="Previous">
+		      <li th:class="${pagenumber} == 1 ? 'disabled page-item' : 'page-item'">
+		        <a class="page-link" th:href="@{'page=' + #pagination.prev(pagenumber)}" aria-label="Previous">
 		          <span aria-hidden="true">Prev</span>
 		        </a>
-		         -->
 		      </li>
-		      <li class="page-item active"><a class="page-link" href="#">1</a></li>
-	   	    <li class="page-item"><a class="page-link" href="#">2</a></li>
+	   	    <li class="page-item active">
+		        <a class="page-link" th:href="@{'page=' + ${pagenumber}}" th:text="${pagenumber}" aria-label="Next">
+		          <span aria-hidden="true"></span>
+		        </a>
+		      </li>
 		      <li class="page-item">
-		      <!-- 
-		        <a class="page-link" th:href="${#pagination.nextUrl(pagenumber)}" aria-label="Next">
+		        <a class="page-link" th:if="#{pagination.next(pagenumber)} != #{pagination.last(pagenumber)}" th:href="@{'page=' + #{pagination.last(pagenumber)}}" th:text="${pagenumber}" aria-label="Next">
+		          <span aria-hidden="true"></span>
+		        </a>
+		      </li>
+		      <li th:class="${lastPage} == ${pagenumber} ? 'disabled page-item' : 'page-item'">
+		        <a class="page-link" th:href="@{'page=' + ${lastPage}}" aria-label="Next">
 		          <span aria-hidden="true">Next</span>
 		        </a>
-		         -->
 		      </li>
 		    </ul>
 		  </div>

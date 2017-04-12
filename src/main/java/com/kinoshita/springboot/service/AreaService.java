@@ -23,7 +23,7 @@ public class AreaService {
 	 * distinct=trueにより重複行を削除している
 	 * @return
 	 */
-	public List<Area> getState() {
+	public List<Area> getStates() {
 		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<Area> query = builder.createQuery(Area.class);
 		Root<Area> root = query.from(Area.class);

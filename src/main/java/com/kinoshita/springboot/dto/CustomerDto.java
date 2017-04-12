@@ -1,6 +1,7 @@
 package com.kinoshita.springboot.dto;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import com.kinoshita.springboot.entity.Customer;
 
@@ -25,36 +26,75 @@ public class CustomerDto {
 	 * @param customer
 	 * @return
 	 */
-	public void convertCustomer(Customer origin) {
+	public CustomerDto(Customer origin) {
 		// customerを格納
-		customer = origin;
+		this.setCustomer(origin);
 		
 		// 郵便番号の先頭から3番目にハイフンを挿入したものを格納
-		if (customer.getPostal_code() == null) {
+		this.setPostal_code(origin.getPostal_code());
+		
+		// 住所1がnullの場合空白（""）を格納
+		this.setAddress1(origin.getAddress1());
+		
+		// 住所2がnullの場合空白（""）を格納
+		this.setAddress2(origin.getAddress2());
+		
+		// 税区分番号に対応した税区分の種類を格納
+		this.setTax_type(origin.getTax_type());
+		
+		// 丸め方法番号に対応した税区分の種類を格納
+		this.setRounding_type(origin.getRounding_type());
+		
+		// 登録日時をyyyy年MM月dd日 hh時mm分のフォーマットにして格納
+		this.setCreated(origin.getCreated());
+		
+		// 更新日時をyyyy年MM月dd日 hh時mm分のフォーマットにして格納
+		this.setUpdated(origin.getUpdated());
+	}
+	
+	/**
+	 * customerに顧客オリジナルデータを格納
+	 * @param originCustomer
+	 */
+	public void setCustomer(Customer originCustomer) {
+		customer = originCustomer;
+	}
+	
+	/**
+	 * 郵便番号の先頭から3番目にハイフンを挿入したものを格納
+	 * @param originPostal_code
+	 */
+	public void setPostal_code(String originPostal_code) {
+		if (originPostal_code == null) {
 			postal_code = null;
 		} else {
-			StringBuffer postal_codeSb = new StringBuffer(customer.getPostal_code());
+			StringBuffer postal_codeSb = new StringBuffer(originPostal_code);
 			postal_codeSb.insert(3, "-");
 			postal_code = new String(postal_codeSb);
 		}
-		
-		// 住所1がnullの場合空白（""）を格納
-		if (customer.getAddress1() == null) {
+	}
+	
+	
+	
+	public void setAddress1(String originAddress1) {
+		if (originAddress1 == null) {
 			address1 = "";
 		} else {
-			address1 = customer.getAddress1();
+			address1 = originAddress1;
 		}
-		
-		// 住所2がnullの場合空白（""）を格納
-		if (customer.getAddress2() == null) {
+	}
+	
+	public void setAddress2(String originAddress2) {
+		if (originAddress2 == null) {
 			address2 = "";
 		} else {
-			address2 = customer.getAddress2();
+			address2 = originAddress2;
 		}
-		
-		// 税区分番号に対応した税区分の種類を格納
-		StringBuffer tax_typeSb = new StringBuffer(customer.getTax_type());
-		switch (customer.getTax_type()) {
+	}
+	
+	public void setTax_type(Integer originTax_type) {
+		StringBuffer tax_typeSb = new StringBuffer(originTax_type);
+		switch (originTax_type) {
 			case 1:
 				tax_typeSb.append("切捨て");
 				break;
@@ -66,10 +106,11 @@ public class CustomerDto {
 				break;
 		}
 		tax_type = new String(tax_typeSb);
-		
-		// 丸め方法番号に対応した税区分の種類を格納
-		StringBuffer rounding_typeSb = new StringBuffer(customer.getRounding_type());
-		switch (customer.getRounding_type()) {
+	}
+	
+	public void setRounding_type(Integer originRounding_type) {
+		StringBuffer rounding_typeSb = new StringBuffer(originRounding_type);
+		switch (originRounding_type) {
 			case 1:
 				rounding_typeSb.append("明細行");
 				break;
@@ -78,21 +119,24 @@ public class CustomerDto {
 				break;
 		}
 		rounding_type = new String(rounding_typeSb);
-		
-		// 登録日時をyyyy年MM月dd日 hh時mm分のフォーマットにして格納
-		if (customer.getCreated() == null) {
+	}
+	
+	public void setCreated(Date originCreated) {
+		if (originCreated == null) {
 			created = null;
 		} else {
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 hh時mm分");
-			created = sdf.format(customer.getCreated());
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 kk時mm分");
+			created = sdf.format(originCreated);
 		}
-		
-		// 更新日時をyyyy年MM月dd日 hh時mm分のフォーマットにして格納
-		if (customer.getUpdated() == null) {
+	}
+	
+	
+	public void setUpdated(Date originUpdated) {
+		if (originUpdated == null) {
 			updated = null;
 		} else {
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 hh時mm分");
-			updated = sdf.format(customer.getUpdated());
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 kk時mm分");
+			updated = sdf.format(originUpdated);
 		}
 	}
 	
