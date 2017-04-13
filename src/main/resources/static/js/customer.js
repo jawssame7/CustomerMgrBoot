@@ -3,6 +3,9 @@
  */
 
 $(function(){
+	
+	var size = $('#customer_name').parent().width() - 1;
+
 	// 名称
 	new Suggest.Local(
       "customer_name",
@@ -11,20 +14,31 @@ $(function(){
       {
         highlight: true,
         hookBeforeSearch: function(nameSearchData) {
-         var self = this;
+         var self = this,
+         	suggestArea = $(self.suggestArea);
+
+         suggestArea.width(size);
+         
          $.ajax({
-       	  type: 'POST',
+       	  type: 'GET',
        	  url: '/name/search',
        	  dataType: 'json',
        	  data: {nameSearchData},
        	  
        	  success: function (res) {
-       		  var name_list = res;
-       		  $('#customer_name').autocomplete({
-       			source: name_list,
-       			autoFocus: true,
-       			minLength: 1
-       		  });
+   		  	
+       		self.clearSuggestArea();
+       		self.candidateList = res;
+       		var resultList = self._search(nameSearchData);
+	       	 if (resultList.length != 0){
+	             self.createSuggestArea(resultList);
+	          }
+//       		  var name_list = res;
+//       		  $('#customer_name').autocomplete({
+//       			source: name_list,
+//       			autoFocus: true,
+//       			minLength: 1
+//       		  });
        	  }	  
        	});
        }
@@ -47,6 +61,7 @@ $(function(){
        	  data: {kanaSearchData},
        	  
        	  success: function (res) {
+       		  
        		  var kana_list = res;
        		  $('#customer_kana').autocomplete({
        			source: kana_list,
