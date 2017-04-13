@@ -72,7 +72,7 @@ public class CustomerController {
 //		String lastPage = pagination.last(customerList.size());
 		
 		// ページネーションを反映
-		mav.addObject("pagenumber", page);
+		mav.addObject("now_page", page);
 //		mav.addObject("lastPage", lastPage);
 		
 		return mav;
@@ -93,16 +93,15 @@ public class CustomerController {
 		mav.addObject("area_list", this.getStateList());
 		
 		// 顧客検索
+		Page<Customer> list = customerService.findCustomers(condition, page);
+		
 		List<CustomerDto> customerList = this.getSearchResult(condition, page);
 		
 		// 顧客リストを反映
 		mav.addObject("customer_list", customerList);
 		
-//		String lastPage = pagination.last(customerList.size());
-		
 		// ページネーションを反映
-		mav.addObject("pagenumber", page);
-//		mav.addObject("lastPage", lastPage);
+		mav.addObject("page", list);
 		return mav;
 	}
 	
@@ -111,10 +110,11 @@ public class CustomerController {
 	 * @param nameSearchData
 	 * @return
 	 */
-	@RequestMapping(value = "/name/search", method = RequestMethod.POST)
+	@RequestMapping(value = "/name/search", method = RequestMethod.GET)
 	@ResponseBody
 	public List<String> nameSuggest(@RequestParam String nameSearchData) {
 		
+		System.out.println("aaa");
 		List<String> nameList = customerRepository.findByNameLikeLimit10(nameSearchData);
 		return nameList;
 	}
@@ -124,7 +124,7 @@ public class CustomerController {
 	 * @param kanaSearchData
 	 * @return
 	 */
-	@RequestMapping(value = "/kana/search", method = RequestMethod.POST)
+	@RequestMapping(value = "/kana/search", method = RequestMethod.GET)
 	@ResponseBody
 	public List<String> kanaSuggest(@RequestParam String kanaSearchData) {
 		

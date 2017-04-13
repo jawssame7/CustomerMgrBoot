@@ -158,40 +158,42 @@
         </table>
       </div>
       <!-- ページネーション -->
+      <!-- 
 	    <div>
 		    <ul class="pagination justify-content-center">
-		    	<li th:class="${pagenumber} == 1 ? 'disabled page-item' : 'page-item'">
-		        <a class="page-link" th:href="@{'page=' + #pagination.prev(pagenumber)}" aria-label="Previous">
+		    	<li th:class="${page.getNumber() + 1} == 1 ? 'disabled page-item' : 'page-item'">
+		        <a class="page-link" href="page=1">
 		          <span aria-hidden="true">&lt;&lt;</span>
 		        </a>
 		      </li>
-		      <li th:class="${pagenumber} == 1 ? 'disabled page-item' : 'page-item'">
-		        <a class="page-link" th:href="@{'page=' + #pagination.prev(pagenumber)}" aria-label="Previous">
+		      <li th:class="${page.getNumber() + 1} == 1 ? 'disabled page-item' : 'page-item'">
+		        <a class="page-link" th:href="'page=' + ${page.getNumber()}">
 		          <span aria-hidden="true">&lt;</span>
 		        </a>
 		      </li>
 	   	    <li class="page-item active">
-		        <a class="page-link" th:href="@{'page=' + ${pagenumber}}" th:text="${pagenumber}" aria-label="Next">
+		        <a class="page-link" th:href="@{'page=' + ${page.getNumber() + 1}}" th:text="${page.getNumber() + 1}">
 		          <span aria-hidden="true"></span>
 		        </a>
 		      </li>
-		      <li class="page-item">
-		        <a class="page-link" th:if="#{pagination.next(pagenumber)} != #{pagination.last(pagenumber)}" th:href="@{'page=' + #{pagination.last(pagenumber)}}" th:text="${pagenumber}" aria-label="Next">
+		      <li class="page-item" th:if="${page.getNumber() + 1} != ${page.getTotalPages()}" >
+		        <a class="page-link" th:href="@{'page=' + ${page.nextPageable().getPageNumber() + 1}}" th:text="${page.getNumber() + 2}">
 		          <span aria-hidden="true"></span>
 		        </a>
 		      </li>
-		      <li th:class="${lastPage} == ${pagenumber} ? 'disabled page-item' : 'page-item'">
-		        <a class="page-link" th:href="@{'page=' + #pagination.next(pagenumber)}" aria-label="Next">
+		      <li th:class="${page.hasNextPage()} ? 'page-item' : 'disabled page-item'">
+		        <a class="page-link" th:href="@{#pageHelper.next(${page})}">
 		          <span aria-hidden="true">&gt;</span>
 		        </a>
 		      </li>
-		      <li th:class="${lastPage} == ${pagenumber} ? 'disabled page-item' : 'page-item'">
-		        <a class="page-link" th:href="@{'page=' + #pagination.next(pagenumber)}" aria-label="Next">
+		      <li th:class="${page.hasNextPage()} ? 'page-item' : 'disabled page-item'">
+		        <a class="page-link" th:href="@{'page=' + ${page.getTotalPages()}}">
 		          <span aria-hidden="true">&gt;&gt;</span>
 		        </a>
 		      </li>
 		    </ul>
 		  </div>
+		   -->
 </main>
   </div>
 </div>

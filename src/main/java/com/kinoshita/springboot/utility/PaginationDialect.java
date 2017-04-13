@@ -17,7 +17,7 @@ public class PaginationDialect extends AbstractDialect implements IExpressionEnh
 	@Override
 	public Map<String, Object> getAdditionalExpressionObjects(IProcessingContext processingContext) {
 		Map<String, Object> objects = new HashMap<>();
-		objects.put("pagination", new PaginationUtility());
+		objects.put("pageHelper", new PaginationUtility());
 		return objects;
 	}
 
