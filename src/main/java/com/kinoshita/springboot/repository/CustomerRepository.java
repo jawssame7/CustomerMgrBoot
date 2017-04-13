@@ -14,6 +14,10 @@ import com.kinoshita.springboot.entity.Customer;
 public interface CustomerRepository extends JpaRepository<Customer, Long>, JpaSpecificationExecutor<Customer> {
 	
 	// 名前サジェスト - 10件
-	@Query(value = "SELECT name FROM customer WHERE name LIKE %:name% LIMIT 10", nativeQuery = true)
-	public List<String> suggestName(@Param("name") String name);
+	@Query(value = "SELECT name FROM customer WHERE name LIKE :name% LIMIT 10", nativeQuery = true)
+	public List<String> findByNameLikeLimit10(@Param("name") String name);
+	
+	// かなサジェスト - 10件
+	@Query(value = "SELECT kana FROM customer WHERE kana LIKE :kana% LIMIT 10", nativeQuery = true)
+	public List<String> findByKanaLikeLimit10(@Param("kana") String kana);
 }

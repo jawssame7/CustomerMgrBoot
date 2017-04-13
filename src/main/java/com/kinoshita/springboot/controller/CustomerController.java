@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -63,16 +64,16 @@ public class CustomerController {
 		// 検索条件null
 		CustomerSearchConditions condition = null;
 		// 顧客全取得
-		List<CustomerDto> customerList = this.customerSearchResult(condition, page);
+		List<CustomerDto> customerList = this.getSearchResult(condition, page);
 		
 		// 顧客リストを反映
 		mav.addObject("customer_list", customerList);
 		
-		String lastPage = pagination.last(customerList.size());
+//		String lastPage = pagination.last(customerList.size());
 		
 		// ページネーションを反映
 		mav.addObject("pagenumber", page);
-		mav.addObject("lastPage", lastPage);
+//		mav.addObject("lastPage", lastPage);
 		
 		return mav;
 	}
@@ -92,27 +93,43 @@ public class CustomerController {
 		mav.addObject("area_list", this.getStateList());
 		
 		// 顧客検索
-		List<CustomerDto> customerList = this.customerSearchResult(condition, page);
+		List<CustomerDto> customerList = this.getSearchResult(condition, page);
 		
 		// 顧客リストを反映
 		mav.addObject("customer_list", customerList);
+		
+//		String lastPage = pagination.last(customerList.size());
+		
 		// ページネーションを反映
 		mav.addObject("pagenumber", page);
-
+//		mav.addObject("lastPage", lastPage);
 		return mav;
 	}
 	
 	/**
 	 * 名称サジェスト
-	 * @param name
+	 * @param nameSearchData
 	 * @return
 	 */
-	@RequestMapping(value = "/name/search", method = RequestMethod.GET)
+	@RequestMapping(value = "/name/search", method = RequestMethod.POST)
 	@ResponseBody
-	public List<String> nameSuggest(String name) {
-		List<String> nameList = customerRepository.suggestName(name);
+	public List<String> nameSuggest(@RequestParam String nameSearchData) {
 		
+		List<String> nameList = customerRepository.findByNameLikeLimit10(nameSearchData);
 		return nameList;
+	}
+	
+	/**
+	 * かなサジェスト
+	 * @param kanaSearchData
+	 * @return
+	 */
+	@RequestMapping(value = "/kana/search", method = RequestMethod.POST)
+	@ResponseBody
+	public List<String> kanaSuggest(@RequestParam String kanaSearchData) {
+		
+		List<String> kanaList = customerRepository.findByKanaLikeLimit10(kanaSearchData);
+		return kanaList;
 	}
 	
 	
@@ -181,7 +198,7 @@ public class CustomerController {
 	 * @param condition
 	 * @return
 	 */
-	private List<CustomerDto> customerSearchResult(CustomerSearchConditions condition, Integer page) {
+	private List<CustomerDto> getSearchResult(CustomerSearchConditions condition, Integer page) {
 		Page<Customer> list = customerService.findCustomers(condition, page);
 		
 		List<CustomerDto> convertCustomerList = new ArrayList<CustomerDto>();

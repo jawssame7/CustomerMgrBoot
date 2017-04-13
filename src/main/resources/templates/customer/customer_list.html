@@ -7,14 +7,6 @@
 	<link rel="stylesheet" href="/css/bootstrap.css" />
 	<link rel="stylesheet" href="/css/layout.css" />
 	<link rel="stylesheet" href="/css/style.css" />
-	
-	<script src="/js/jquery-3.1.1.js"></script>
-	<script src="/js/jquery-ui.js"></script>
-	<script src="/js/tether.js"></script>
-	<script src="/js/bootstrap.js"></script>
-	<script src="/js/table_size.js"></script>
-	<script src="/js/customer.js"></script>
-	<script src="/js/search_url.js"></script>
 </head>
 
 <body>
@@ -74,12 +66,14 @@
 						  <label for="name" class="col-2 col-form-label">顧客名称</label>
 						  <div class="col-10">
 						    <input id="customer_name" class="form-control" type="search" name="name" maxlength="40" th:value="${name}" />
+						    <div id="name_suggest" class="suggest" style="display: none;"></div>
 						  </div>
 						</div>
 						<div class="form-group-sm row">
 						  <label for="kana" class="col-2 col-form-label">顧客名称（かな）</label>
 						  <div class="col-10">
 						    <input id="customer_kana" class="form-control" type="search" name="kana" th:value="${kana}"/>
+						  	<div id="kana_suggest" class="suggest" style="display: none;"></div>
 						  </div>
 						</div>
 						<div class="form-group-sm row">
@@ -166,9 +160,14 @@
       <!-- ページネーション -->
 	    <div>
 		    <ul class="pagination justify-content-center">
+		    	<li th:class="${pagenumber} == 1 ? 'disabled page-item' : 'page-item'">
+		        <a class="page-link" th:href="@{'page=' + #pagination.prev(pagenumber)}" aria-label="Previous">
+		          <span aria-hidden="true">&lt;&lt;</span>
+		        </a>
+		      </li>
 		      <li th:class="${pagenumber} == 1 ? 'disabled page-item' : 'page-item'">
 		        <a class="page-link" th:href="@{'page=' + #pagination.prev(pagenumber)}" aria-label="Previous">
-		          <span aria-hidden="true">Prev</span>
+		          <span aria-hidden="true">&lt;</span>
 		        </a>
 		      </li>
 	   	    <li class="page-item active">
@@ -182,8 +181,13 @@
 		        </a>
 		      </li>
 		      <li th:class="${lastPage} == ${pagenumber} ? 'disabled page-item' : 'page-item'">
-		        <a class="page-link" th:href="@{'page=' + ${lastPage}}" aria-label="Next">
-		          <span aria-hidden="true">Next</span>
+		        <a class="page-link" th:href="@{'page=' + #pagination.next(pagenumber)}" aria-label="Next">
+		          <span aria-hidden="true">&gt;</span>
+		        </a>
+		      </li>
+		      <li th:class="${lastPage} == ${pagenumber} ? 'disabled page-item' : 'page-item'">
+		        <a class="page-link" th:href="@{'page=' + #pagination.next(pagenumber)}" aria-label="Next">
+		          <span aria-hidden="true">&gt;&gt;</span>
 		        </a>
 		      </li>
 		    </ul>
@@ -191,5 +195,14 @@
 </main>
   </div>
 </div>
+
+	<script src="/js/jquery-3.1.1.js"></script>
+	<script src="/js/jquery-ui.js"></script>
+	<script src="/js/tether.js"></script>
+	<script src="/js/bootstrap.js"></script>
+	<script src="/js/table_size.js"></script>
+	<script src="/js/suggest.js"></script>
+	<script src="/js/customer.js"></script>
+	<script src="/js/search_url.js"></script>
 </body>
 </html>
