@@ -3,6 +3,7 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<title>入金管理システム</title>
+	<!-- スタイルシート -->
 	<link rel="stylesheet" href="/css/jquery-ui.css" />
 	<link rel="stylesheet" href="/css/bootstrap.css" />
 	<link rel="stylesheet" href="/css/layout.css" />
@@ -25,7 +26,6 @@
   </div>
 </nav>
 
-<!-- コンテンツ -->
 <div class="container-fluid">
   <div class="row">
   <!-- サイドメニュー -->
@@ -46,7 +46,7 @@
       </ul>
     </nav>
 
-<!-- メインコンテンツ -->
+<!-- メイン -->
 <main class="col-sm-9 offset-sm-3 col-md-10 offset-md-2 pt-3">
 <!-- 検索欄 -->
     <div id="accordion" role="tablist" aria-multiselectable="true">
@@ -65,52 +65,52 @@
 						<div class="form-group-sm row">
 						  <label for="name" class="col-2 col-form-label">顧客名称</label>
 						  <div class="col-10">
-						    <input id="customer_name" class="form-control" type="search" name="name" maxlength="40" th:value="${name}" />
+						    <input id="customer_name" class="form-control" type="search" name="name" maxlength="40" th:value="*{name}" />
 						    <div id="name_suggest" class="suggest" style="display: none;"></div>
 						  </div>
 						</div>
 						<div class="form-group-sm row">
 						  <label for="kana" class="col-2 col-form-label">顧客名称（かな）</label>
 						  <div class="col-10">
-						    <input id="customer_kana" class="form-control" type="search" name="kana" th:value="${kana}"/>
+						    <input id="customer_kana" class="form-control" type="search" name="kana" th:value="*{kana}"/>
 						  	<div id="kana_suggest" class="suggest" style="display: none;"></div>
 						  </div>
 						</div>
 						<div class="form-group-sm row">
 						  <label for="postal_code" class="col-2 col-form-label">郵便番号<small>&emsp;※半角数字</small></label>
 						  <div class="col-2">
-						    <input id="postal_code" class="form-control" type="search" name="postal_code" maxlength="7" th:value="${postal_code}" />
+						    <input id="postal_code" class="form-control" type="search" name="postal_code" maxlength="7" th:value="*{postal_code}" />
 						  </div>
 						</div>
 						<div class="form-group-sm row">
 						  <label for="address1" class="col-2 col-form-label">住所1</label>
 						  <div class="col-2">
 						    <select id="address1" class="search-select" name="address1">
-						    	<option selected="selected" value="">都道府県選択</option>
-						    	<option th:each="area: ${area_list}" th:text="${area}" th:value="${area}"></option>
+						    	<option value="">都道府県選択</option>
+						    	<option th:each="area: ${area_list}" th:text="${area}" th:value="${area}" th:selected="${area} == *{address1}"></option>
 						    </select>
 						  </div>
 						  <div class="col-1"></div>
 						  <label for="address2" class="col-2 col-form-label">住所2</label>
 						  <div class="col-5">
-						    <input id="address2" class="form-control" type="search" name="address2" maxlength="40" th:value="${address2}" />
+						    <input id="address2" class="form-control" type="search" name="address2" maxlength="40" th:value="*{address2}" />
 						  </div>
 						</div>
 						<div class="form-group-sm row">
 						  <label for="tel" class="col-2 col-form-label">電話番号<small>&emsp;※半角数字</small></label>
 						  <div class="col-2">
-						    <input id="tel" class="form-control" type="search" name="tel" maxlength="14" th:value="${tel}" />
+						    <input id="tel" class="form-control" type="search" name="tel" maxlength="14" th:value="*{tel}" />
 						  </div>
 						  <div class="col-1"></div>
 						  <label for="fax" class="col-2 col-form-label">FAX番号<small>&emsp;※半角数字</small></label>
 						  <div class="col-2">
-						    <input id="fax" class="form-control" type="search" name="fax" maxlength="14" th:value="${fax}" />
+						    <input id="fax" class="form-control" type="search" name="fax" maxlength="14" th:value="*{fax}" />
 						  </div>
 						</div>
 					</form>
 					<hr />
           <button type="submit" id="searchBtn" form="form-search" class="btn btn-primary btn-right btn-margin-left">検　索</button>
-          <input type="reset" form="form-search" value="検索条件リセット" class="btn btn-secondary btn-search btn-right" />
+          <input type="button" id="conditionDelete" form="form-search" value="検索条件リセット" class="btn btn-secondary btn-search btn-right" />
           </div>
         </div>
       </div>
@@ -118,7 +118,7 @@
 
     <h5>顧客データ</h5>
     <button type="button" class="btn btn-success btn-right btn-margin-bottom margin-right" onclick="location.href='/customer/entry'">新規登録</button>  
-<!-- テーブル -->
+<!-- データテーブル -->
       <div class="table-responsive">
         <table class="table table-striped table-bordered table-sm table-hover">
           <thead>
@@ -157,54 +157,75 @@
           </tbody>
         </table>
       </div>
+      
       <!-- ページネーション -->
-      <!-- 
 	    <div>
 		    <ul class="pagination justify-content-center">
-		    	<li th:class="${page.getNumber() + 1} == 1 ? 'disabled page-item' : 'page-item'">
+		    	<!-- 最初へ / 前へ -->
+		    	<li th:class="${now_page} == 1 ? 'disabled page-item' : 'page-item'">
 		        <a class="page-link" href="page=1">
 		          <span aria-hidden="true">&lt;&lt;</span>
 		        </a>
 		      </li>
-		      <li th:class="${page.getNumber() + 1} == 1 ? 'disabled page-item' : 'page-item'">
-		        <a class="page-link" th:href="'page=' + ${page.getNumber()}">
+		      <li th:class="${now_page} == 1 ? 'disabled page-item' : 'page-item'">
+		        <a class="page-link" th:href="'page=' + ${now_page - 1}">
 		          <span aria-hidden="true">&lt;</span>
 		        </a>
 		      </li>
-	   	    <li class="page-item active">
-		        <a class="page-link" th:href="@{'page=' + ${page.getNumber() + 1}}" th:text="${page.getNumber() + 1}">
+		      
+		      <!-- 最大ページ > 10 && 現在ページ <= 6 -->
+	   	    <li th:class="${i} == ${now_page} ? 'page-item active' : 'page-item'" th:if="${last_page} gt 10 and ${now_page} le 6" th:each="i : ${#numbers.sequence(1, 10)}">
+		        <a class="page-link" th:href="@{'page=' + ${i}}" th:text="${i}">
 		          <span aria-hidden="true"></span>
 		        </a>
 		      </li>
-		      <li class="page-item" th:if="${page.getNumber() + 1} != ${page.getTotalPages()}" >
-		        <a class="page-link" th:href="@{'page=' + ${page.nextPageable().getPageNumber() + 1}}" th:text="${page.getNumber() + 2}">
+		      
+		      <!-- 最大ページ > 10 && 現在ページ > 6 && 現在ページ < 最大ページ - 4 -->
+		      <li th:class="${now_page + i} == ${now_page} ? 'page-item active' : 'page-item'" th:if="${last_page} gt 10 and ${now_page} gt 6 and ${now_page} lt ${last_page - 4}" th:each="i : ${#numbers.sequence(-5, 4)}">
+		        <a class="page-link" th:href="@{'page=' + ${now_page + i}}" th:text="${now_page + i}">
 		          <span aria-hidden="true"></span>
 		        </a>
 		      </li>
-		      <li th:class="${page.hasNextPage()} ? 'page-item' : 'disabled page-item'">
-		        <a class="page-link" th:href="@{#pageHelper.next(${page})}">
+		      
+		      <!-- 最大ページ > 10 && 現在ページ >= 最大ページ - 4 -->
+		      <li th:class="${i} == ${now_page} ? 'page-item active' : 'page-item'" th:if="${last_page} gt 10 and ${now_page} ge ${last_page - 4}" th:each="i : ${#numbers.sequence(last_page - 9, last_page)}">
+		        <a class="page-link" th:href="@{'page=' + ${i}}" th:text="${i}">
+		          <span aria-hidden="true"></span>
+		        </a>
+		      </li>
+		      
+		      <!-- 最大ページ <= 10 -->
+		      <li th:class="${i} == ${now_page} ? 'page-item active' : 'page-item'" th:unless="${last_page} > 10" th:each="i : ${#numbers.sequence(1, last_page)}">
+		        <a class="page-link" th:href="@{'page=' + ${i}}" th:text="${i}">
+		          <span aria-hidden="true"></span>
+		        </a>
+		      </li>
+		      
+		      <!-- 次へ / 最後へ -->
+		      <li th:class="${now_page == last_page} ? 'disabled page-item' : 'page-item'">
+		        <a class="page-link" th:href="@{'page=' + ${#pageHelper.next(now_page)}}">
 		          <span aria-hidden="true">&gt;</span>
 		        </a>
 		      </li>
-		      <li th:class="${page.hasNextPage()} ? 'page-item' : 'disabled page-item'">
-		        <a class="page-link" th:href="@{'page=' + ${page.getTotalPages()}}">
+		      <li th:class="${now_page == last_page} ? 'disabled page-item' : 'page-item'">
+		        <a class="page-link" th:href="@{'page=' + ${last_page}}">
 		          <span aria-hidden="true">&gt;&gt;</span>
 		        </a>
 		      </li>
 		    </ul>
 		  </div>
-		   -->
 </main>
   </div>
 </div>
-
+<!-- スクリプト -->
 	<script src="/js/jquery-3.1.1.js"></script>
 	<script src="/js/jquery-ui.js"></script>
 	<script src="/js/tether.js"></script>
 	<script src="/js/bootstrap.js"></script>
 	<script src="/js/table_size.js"></script>
 	<script src="/js/suggest.js"></script>
-	<script src="/js/customer.js"></script>
-	<script src="/js/search_url.js"></script>
+	<script src="/js/suggest_customer.js"></script>
+	<script src="/js/form_delete.js"></script>
+	<script src="/js/search.js"></script>
 </body>
 </html>

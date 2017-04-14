@@ -9,8 +9,8 @@ public class PaginationUtility {
 	 * @param page
 	 * @return
 	 */
-	public String prev(int page) {
-		return "page=" + (page > 1 ? page - 1 : 1);
+	public int prev(int page) {
+		return page > 1 ? page - 1 : 1;
 	}
 	
 	/**
@@ -18,8 +18,8 @@ public class PaginationUtility {
 	 * @param page
 	 * @return
 	 */
-	public String next(int page) {
-		return "page=" + (page + 1);
+	public int next(int page) {
+		return page + 1;
 	}
 	
 	/**
@@ -28,7 +28,7 @@ public class PaginationUtility {
 	 * @param size
 	 * @return
 	 */
-	public String last(int size) {
-		return "page=" + (size / CustomerService.getPAGE_SIZE() + 1);
+	public int last(int size) {
+		return size / CustomerService.getPAGE_SIZE() + 1;
 	}
 }

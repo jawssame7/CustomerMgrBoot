@@ -53,8 +53,8 @@ public class CustomerController {
 	 * @param mav
 	 * @return
 	 */
-	@RequestMapping("/customer/search/page={page}")
-	public ModelAndView searchTop(@PathVariable Integer page, ModelAndView mav) {
+	@RequestMapping("/customer/search/page={pagenumber}")
+	public ModelAndView searchTop(@PathVariable Integer pagenumber, ModelAndView mav) {
 		// customer_list.htmlを適用
 		mav.setViewName("/customer/customer_list");
 		
@@ -64,16 +64,15 @@ public class CustomerController {
 		// 検索条件null
 		CustomerSearchConditions condition = null;
 		// 顧客全取得
-		List<CustomerDto> customerList = this.getSearchResult(condition, page);
+		Page<Customer> page = customerService.findCustomers(condition, pagenumber);
+		List<CustomerDto> customerList = this.getSearchResult(page);
 		
 		// 顧客リストを反映
 		mav.addObject("customer_list", customerList);
 		
-//		String lastPage = pagination.last(customerList.size());
-		
 		// ページネーションを反映
-		mav.addObject("now_page", page);
-//		mav.addObject("lastPage", lastPage);
+		mav.addObject("now_page", pagenumber);
+		mav.addObject("last_page", page.getTotalPages() == 0 ? 1 : page.getTotalElements());
 		
 		return mav;
 	}
@@ -84,24 +83,28 @@ public class CustomerController {
 	 * @param mav
 	 * @return
 	 */
-	@RequestMapping(value = "/customer/search/page={page}", method = RequestMethod.GET)
-	public ModelAndView searchResult(@ModelAttribute CustomerSearchConditions condition, @PathVariable Integer page, ModelAndView mav) {
+	@RequestMapping(value = "/customer/search/page={pagenumber}", method = RequestMethod.GET)
+	public ModelAndView searchResult(@ModelAttribute CustomerSearchConditions condition, @PathVariable Integer pagenumber, ModelAndView mav) {
 		// customer_list.htmlを適用
 		mav.setViewName("/customer/customer_list");
 		
 		// 検索条件セレクトボックスに都道府県を格納
 		mav.addObject("area_list", this.getStateList());
 		
-		// 顧客検索
-		Page<Customer> list = customerService.findCustomers(condition, page);
+		// 検索条件を反映
+		mav.addObject("condition", condition);
 		
-		List<CustomerDto> customerList = this.getSearchResult(condition, page);
+		// 顧客全取得
+		Page<Customer> page = customerService.findCustomers(condition, pagenumber);
+		List<CustomerDto> customerList = this.getSearchResult(page);
 		
 		// 顧客リストを反映
 		mav.addObject("customer_list", customerList);
 		
 		// ページネーションを反映
-		mav.addObject("page", list);
+		mav.addObject("now_page", pagenumber);
+		mav.addObject("last_page", page.getTotalPages() == 0 ? 1 : page.getTotalPages());
+		
 		return mav;
 	}
 	
@@ -198,11 +201,10 @@ public class CustomerController {
 	 * @param condition
 	 * @return
 	 */
-	private List<CustomerDto> getSearchResult(CustomerSearchConditions condition, Integer page) {
-		Page<Customer> list = customerService.findCustomers(condition, page);
+	private List<CustomerDto> getSearchResult(Page<Customer> page) {
 		
 		List<CustomerDto> convertCustomerList = new ArrayList<CustomerDto>();
-		for (Customer customer: list) {
+		for (Customer customer: page) {
 			CustomerDto customerDto = new CustomerDto(customer);
 			
 			// 文字列変換したデータをリストに格納

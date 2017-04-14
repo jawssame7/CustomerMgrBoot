@@ -1,7 +1,19 @@
 /**
- * 検索ボタン押下時のsubmit処理
+ * 検索フォームの送信
  */
 $(function() {
+	
+	// ページネーションのURL設定
+	var query = $(location).attr('search');	
+	var pageElements = $('.pagination').find('a');
+	
+	pageElements.each (function () {
+		var url = $(this).attr('href');
+		$(this).attr('href', url + query);
+	});
+		
+	
+	// 検索フォームsubmit時
 	$('#form-search').submit(function() {
 		// submit処理をキャンセル
 		event.preventDefault();

@@ -19,13 +19,13 @@ public class CustomerService {
 	/**
 	 * 1ページに表示するエンティティ数
 	 */
-	private static final int PAGE_SIZE = 20;
+	private static final int PAGE_SIZE = 2;
 	
 	@Autowired
 	CustomerRepository repository;
 	
 	@PersistenceContext
-	private EntityManager entityManager;
+	private EntityManager em;
 	
 	
 	public static int getPAGE_SIZE() {
@@ -56,49 +56,6 @@ public class CustomerService {
 				.and(CustomerSpecifications.deletedIsNull())
 				, pageRequest);
 		return results;
-		
 	}
 	
-//	public List<Customer> searchCustomers(String name, String kana, String postal_code, 
-//			String address1, String address2, String tel, String fax) {
-//		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-//		CriteriaQuery<Customer> query = builder.createQuery(Customer.class);
-//		Root<Customer> root = query.from(Customer.class);
-//		
-//		query.select(root);
-//		
-//		List<Predicate> creteria = new ArrayList<Predicate>();
-//		
-//		if (name != null) {
-//			creteria.add(builder.equal(root.<String>get("name"), name));
-//		}
-//		
-//		if (kana != null) {
-//			creteria.add(builder.like(root.<String>get("kana"), "%" + kana + "%"));
-//		}
-//		
-//		if (postal_code != null) {
-//			creteria.add(builder.equal(root.<String>get("postal_code"), postal_code));
-//		}
-//		
-//		if (address1 != null) {
-//			creteria.add(builder.equal(root.<String>get("address1"), address1));
-//		}
-//		
-//		if (address2 != null) {
-//			creteria.add(builder.like(root.<String>get("address2"), "%" + address2 + "%"));
-//		}
-//		
-//		if (tel != null) {
-//			creteria.add(builder.equal(root.<String>get("tel"), tel));
-//		}
-//		
-//		if (fax != null) {
-//			creteria.add(builder.equal(root.<String>get("fax"), fax));
-//		}
-//		
-//		creteria.add(builder.equal(root.<String>get("deleted"), null));
-//		
-//		return entityManager.createQuery(query).getResultList();
-//	}
 }
