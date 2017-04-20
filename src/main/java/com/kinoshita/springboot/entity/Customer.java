@@ -9,23 +9,31 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
+import com.kinoshita.springboot.annotation.NullPermissionNum;
+import com.kinoshita.springboot.annotation.PostalCode;
+
 @Entity
 @Table(name = "customer")
 public class Customer {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private Long id;
 	
 	@Column(name = "name", length = 40)
+	@NotEmpty
 	private String name;
 	
 	@Column(name = "kana", length = 40)
+	@NotEmpty
 	private String kana;
 	
-	@Column(name = "postal_code", length = 7)
-	private String postal_code;
+	@Column(name = "postal_code")
+	@PostalCode
+	private String postalCode;
 	
 	@Column(name = "address1")
 	private String address1;
@@ -34,19 +42,21 @@ public class Customer {
 	private String address2;
 	
 	@Column(name = "tel", length = 14)
+	@NullPermissionNum(min = 10, max = 14)
 	private String tel;
 	
 	@Column(name = "fax", length = 14)
+	@NullPermissionNum(min = 10, max = 14)
 	private String fax;
 	
 	@Column(name = "tax_type")
-	private Integer tax_type;
+	private Integer taxType;
 	
 	@Column(name = "rounding_type")
-	private Integer rounding_type;
+	private Integer roundingType;
 	
 	@Column(name = "closing_day")
-	private Integer closing_day;
+	private Integer closingDay;
 
 	@Column(name = "created")
 	private Date created;
@@ -86,12 +96,12 @@ public class Customer {
 		this.kana = kana;
 	}
 
-	public String getPostal_code() {
-		return postal_code;
+	public String getPostalCode() {
+		return postalCode;
 	}
 
-	public void setPostal_code(String postal_code) {
-		this.postal_code = postal_code;
+	public void setPostalCode(String postal_code) {
+		this.postalCode = postal_code;
 	}
 
 	public String getAddress1() {
@@ -126,28 +136,28 @@ public class Customer {
 		this.fax = fax;
 	}
 	
-	public Integer getTax_type() {
-		return tax_type;
+	public Integer getTaxType() {
+		return taxType;
 	}
 
-	public void setTax_type(Integer tax_type) {
-		this.tax_type = tax_type;
+	public void setTaxType(Integer tax_type) {
+		this.taxType = tax_type;
 	}
 
-	public Integer getRounding_type() {
-		return rounding_type;
+	public Integer getRoundingType() {
+		return roundingType;
 	}
 
-	public void setRounding_type(Integer rounding_type) {
-		this.rounding_type = rounding_type;
+	public void setRoundingType(Integer rounding_type) {
+		this.roundingType = rounding_type;
 	}
 
-	public Integer getClosing_day() {
-		return closing_day;
+	public Integer getClosingDay() {
+		return closingDay;
 	}
 
-	public void setClosing_day(Integer closing_day) {
-		this.closing_day = closing_day;
+	public void setClosingDay(Integer closing_day) {
+		this.closingDay = closing_day;
 	}
 
 	public Date getCreated() {

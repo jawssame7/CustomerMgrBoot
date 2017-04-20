@@ -79,7 +79,7 @@
 						<div class="form-group-sm row">
 						  <label for="postal_code" class="col-2 col-form-label">郵便番号<small>&emsp;※半角数字</small></label>
 						  <div class="col-2">
-						    <input id="postal_code" class="form-control" type="search" name="postal_code" maxlength="7" th:value="*{postal_code}" />
+						    <input id="postal_code" class="form-control" type="search" name="postal_code" maxlength="7" th:value="*{postalCode}" />
 						  </div>
 						</div>
 						<div class="form-group-sm row">
@@ -117,7 +117,9 @@
     </div>
 
     <h5>顧客データ</h5>
-    <button type="button" class="btn btn-success btn-right btn-margin-bottom margin-right" onclick="location.href='/customer/entry'">新規登録</button>  
+
+    <button form="entry" type="button" onclick="location.href='/customer/new/entry'" class="btn btn-success btn-right btn-margin-bottom margin-right">新規登録</button>
+    
 <!-- データテーブル -->
       <div class="table-responsive">
         <table class="table table-striped table-bordered table-sm table-hover">
@@ -141,15 +143,15 @@
             <tr th:each="customer: ${customer_list}">
              <th:block th:object="${customer.customer}">
               <td th:text="*{id}">ID</td>
-              <td><a th:text="*{name}" th:href="@{'/customer/detail/id=' + *{id}}">名前</a></td>
+              <td><a th:text="*{name}" th:href="'/customer/' + *{id} + '/detail'">名前</a></td>
               <td th:text="*{kana}">かな</td>
-              <td th:text="${customer.postal_code}">郵便番号</td>
+              <td th:text="${customer.postalCode}">郵便番号</td>
               <td th:text="${customer.address1} + ${customer.address2}">住所1 + 住所2</td>
               <td th:text="*{tel}">電話番号</td>
               <td th:text="*{fax}">FAX番号</td>
-              <td th:text="${customer.tax_type}">税区分</td>
-              <td th:text="${customer.rounding_type}">丸め方法</td>
-              <td th:text="*{closing_day} + '日'">締め日</td>
+              <td th:text="${customer.taxType}">税区分</td>
+              <td th:text="${customer.roundingType}">丸め方法</td>
+              <td th:text="*{closingDay} + '日'">締め日</td>
               <td th:text="${customer.created}">登録日時</td>
               <td th:text="${customer.updated}">更新日時</td>
              </th:block>

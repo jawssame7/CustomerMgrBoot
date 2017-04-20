@@ -21,9 +21,8 @@ $(function(){
 	        suggestArea.width(size);
 	         
 	        $self = $(this);
-	        $self.width(size);
-	
-	         
+	        $self.width(size); 
+	        
 	        $.ajax({
 	       	  type: 'GET',
 	       	  url: '/name/search',

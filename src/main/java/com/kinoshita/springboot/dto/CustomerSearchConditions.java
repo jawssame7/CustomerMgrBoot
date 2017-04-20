@@ -9,7 +9,7 @@ public class CustomerSearchConditions {
 
 	private String name;
 	private String kana;
-	private String postal_code;
+	private String postalCode;
 	private String address1;
 	private String address2;
 	private String tel;
@@ -28,11 +28,11 @@ public class CustomerSearchConditions {
 	public void setKana(String kana) {
 		this.kana = kana;
 	}
-	public String getPostal_code() {
-		return postal_code;
+	public String getPostalCode() {
+		return postalCode;
 	}
-	public void setPostal_code(String postal_code) {
-		this.postal_code = postal_code;
+	public void setPostalCode(String postal_code) {
+		this.postalCode = postal_code;
 	}
 	public String getAddress1() {
 		return address1;

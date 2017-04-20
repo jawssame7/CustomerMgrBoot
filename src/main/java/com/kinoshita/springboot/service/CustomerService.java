@@ -19,7 +19,7 @@ public class CustomerService {
 	/**
 	 * 1ページに表示するエンティティ数
 	 */
-	private static final int PAGE_SIZE = 2;
+	private static final int PAGE_SIZE = 20;
 	
 	@Autowired
 	CustomerRepository repository;
@@ -48,7 +48,7 @@ public class CustomerService {
 		Page<Customer> results = repository.findAll(Specifications
 				.where(CustomerSpecifications.nameContains(condition.getName()))
 				.and(CustomerSpecifications.kanaContains(condition.getKana()))
-				.and(CustomerSpecifications.postal_codeContains(condition.getPostal_code()))
+				.and(CustomerSpecifications.postalCodeContains(condition.getPostalCode()))
 				.and(CustomerSpecifications.address1Contains(condition.getAddress1()))
 				.and(CustomerSpecifications.address2Contains(condition.getAddress2()))
 				.and(CustomerSpecifications.telContains(condition.getTel()))

@@ -45,11 +45,11 @@ public class CustomerSpecifications {
 	 * @param postal_code
 	 * @return
 	 */
-	public static Specification<Customer> postal_codeContains(String postal_code) {
-		return StringUtils.isEmpty(postal_code) ? null : new Specification<Customer>() {
+	public static Specification<Customer> postalCodeContains(String postalCode) {
+		return StringUtils.isEmpty(postalCode) ? null : new Specification<Customer>() {
 			@Override
 			public Predicate toPredicate(Root<Customer> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-				return cb.equal(root.get("postal_code"), postal_code);
+				return cb.equal(root.get("postal_code"), postalCode);
 			}
 		};
 	}

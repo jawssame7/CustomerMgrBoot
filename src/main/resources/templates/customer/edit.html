@@ -50,75 +50,88 @@
   
 <!-- テーブル -->
     <h5>編集</h5><span class="explain">入力終了後、「確認」をクリックしてください。</span>
-    <form id="entry">
-    <button type="button" class="btn btn-info btn-right btn-margin-left btn-margin-bottom" onclick="location.href='/customer/check'">確認</button></form>
+    <form id="edit" method="post" th:object="${customer}" action="/customer/check">
+    <button type="submit" form="edit" class="btn btn-info btn-right btn-margin-left btn-margin-bottom">確認</button></form>
     <button type="button" class="btn btn-secondary btn-right btn-margin-bottom" onclick="location.href='/customer/detail'">戻る</button>
     <div class="table">
       <table class="table table-bordered table-sm table-hover table-list">
       	<tbody>
           <tr>
           	<th>名称</th>
-            <td><input class="width-650" type="text" form="entry" name="name" value="顧客データ" maxlength="40" />
-            <span style="visibility : hidden; color: red; margin-left: 10px;">必須項目です。</span></td>
+            <td><input id="name" class="width-650" type="text" form="entry" name="name" maxlength="40" th:value="*{name}" />
+            <!-- 
+            <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" style="color: red; margin-left: 10px;">必須項目です。</span>
+             -->
+            </td>
           </tr>
           <tr>
-         		<th>かな</th> 
-            <td><input class="width-650" type="text" form="entry" name="kana" value="こきゃくでーた" />
-            <span style="visibility : hidden; color: red; margin-left: 10px;">必須項目です。</span></td>
+         		<th>かな</th>
+            <td><input id="kana" class="width-650" type="text" form="entry" name="kana" th:value="*{kana}" />
+            <!-- 
+            <span th:if="${#fields.hasErrors('kana')}" th:errors="*{kana}" style="color: red; margin-left: 10px;">必須項目です。</span>
+             -->
+            </td>
           </tr>
           <tr>
           	<th>郵便番号<small>&emsp;※半角数字</small></th>
-            <td><input class="width-100" type="text" form="entry" name="postal_code" value="0000000" maxlength="7" />
-            <button class="btn auto-insert">自動入力</button>
-            <span style="visibility : hidden; color: red; margin-left: 10px;">正しい郵便番号を入力してください。</span></td>
+            <td><input id="postal_code" class="width-100" type="text" form="entry" name="postalCode" maxlength="7" th:value="*{postalCode}" />
+            <button class="btn auto-insert" id="auto_address">住所自動入力</button>
+            <!-- 
+            <span th:if="${#fields.hasErrors('postalCode')}" th:errors="*{postalCode}" style="color: red; margin-left: 10px;">正しい郵便番号を入力してください。</span>
+             -->
+            </td>
           </tr>
           <tr>
           	<th>住所1</th>
-            <td><select form="entry" name="address1">
-				    	<option>北海道</option>
-				    	<option>東京都</option>
-				    	<option selected="selected">鹿児島県</option>
-				    	<option>沖縄県</option>
+            <td><select id="address1" form="entry" class="table-form-select" name="address1">
+				    	<option value="">都道府県選択</option>
+				    	<option th:each="area: ${area_list}" th:text="${area}" th:value="${area}" th:selected="${area} == *{address1}"></option>
 						</select></td>
           </tr>
           <tr>
             <th>住所2</th>
-            <td><input class="input-width-max" type="text" form="entry" name="address2" value="鹿児島市星ヶ峯1-1-1" /></td>
+            <td><input id="address2" class="input-width-max" type="text" form="entry" name="address2" maxlength="100" th:value="*{address2}" /></td>
           </tr>
           <tr>
             <th>電話番号<small>&emsp;※半角数字</small></th>
-            <td><input class="width-150" type="text" form="entry" name="tel" value="00000000000" maxlength="14" />
-            <span style="visibility : hidden; color: red; margin-left: 10px;">正しい電話番号を入力してください。</span></td>
+            <td><input id="tel" class="width-150" type="text" form="entry" name="tel" maxlength="14" th:value="*{tel}" />
+            <!-- 
+						<span th:if="${#fields.hasErrors('tel')}" th:errors="*{tel}" style="color: red; margin-left: 10px;">正しい電話番号を入力してください。</span>
+						 -->
+						</td>
           </tr>
           <tr>
             <th>FAX番号<small>&emsp;※半角数字</small></th>
-            <td><input class="width-150" type="text" form="entry" name="fax" value="00000000000" maxlength="14" />
-            <span style="visibility : hidden; color: red; margin-left: 10px;">正しい電話番号を入力してください。</span></td>
+            <td><input id="fax" class="width-150" type="text" form="entry" name="fax" maxlength="14" th:value="*{fax}" />
+            <!-- 
+						<span th:if="${#fields.hasErrors('fax')}" th:errors="*{fax}" style="color: red; margin-left: 10px;">正しいFAX番号を入力してください。</span>
+						 -->
+						</td>
           </tr>
           <tr>
             <th>税区分</th>
-            <td><select form="entry" name="address1">
-				    	<option value="1" selected="selected">1 : 切捨て</option>
-				    	<option value="2">2 : 四捨五入</option>
-				    	<option value="3">3 : 切り上げ</option>
+            <td><select id="tax_type" form="entry" class="table-form-select" name="taxType">
+				    	<option th:value="1" th:selected="*{taxType} == 1">切捨て</option>
+				    	<option th:value="2" th:selected="*{taxType} == 2">四捨五入</option>
+				    	<option th:value="3" th:selected="*{taxType} == 3">切り上げ</option>
 						</select></td>
           </tr>
           <tr>
             <th>丸め方法</th>
-            <td><select form="entry" name="rounding_type" class="table-form-select">
-				    	<option value="1" selected="selected">1 : 明細行</option>
-				    	<option value="2">2 : 請求書</option>
+            <td><select id="rounding_type" form="entry" class="table-form-select" name="roundingType">
+				    	<option value="1" th:selected="*{roundingType} == 1">明細行</option>
+				    	<option value="2" th:selected="*{roundingType} == 2">請求書</option>
 						</select></td>
           </tr>
           <tr>
             <th>締め日</th>
-            <td><select form="entry" name="address1">
-				    	<option selected="selected">5日</option>
-				    	<option>10日</option>
-				    	<option>15日</option>
-				    	<option>20日</option>
-				    	<option>25日</option>
-				    	<option>31日</option>
+            <td><select id="closing_day" form="entry" class="table-form-select" name="closingDay">
+				    	<option th:value="5" th:selected="*{closingDay} == 5">5日</option>
+				    	<option th:value="10" th:selected="*{closingDay} == 10">10日</option>
+				    	<option th:value="15" th:selected="*{closingDay} == 15">15日</option>
+				    	<option th:value="20" th:selected="*{closingDay} == 20">20日</option>
+				    	<option th:value="25" th:selected="*{closingDay} == 25">25日</option>
+				    	<option th:value="31" th:selected="*{closingDay} == 31">31日</option>
 						</select></td>
           </tr>
         </tbody>
