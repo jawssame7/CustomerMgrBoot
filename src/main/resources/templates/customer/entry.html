@@ -49,7 +49,7 @@
 <main class="col-sm-9 offset-sm-3 col-md-10 offset-md-2 pt-3">
   
 <!-- テーブル -->
-    <h5>新規登録</h5><span class="explain">入力終了後、「確認」をクリックしてください。</span>
+    <h5>新規登録</h5><span class="explain">入力終了後「確認」をクリックしてください。</span>
     <form id="entry" method="post" th:object="${customer}" action="/customer/redirect/check">
     <button type="submit" form="entry" class="btn btn-info btn-right btn-margin-left btn-margin-bottom">確認</button>
     <button type="button" class="btn btn-secondary btn-right btn-margin-bottom" onclick="location.href='/'">戻る</button>
@@ -72,7 +72,7 @@
           	<th>郵便番号<small>&emsp;※半角数字</small></th>
             <td><input name="postalCode" th:value="*{postalCode}" maxlength="7" id="postal_code" class="width-100" form="entry" type="text" />
             <button class="btn auto-insert" id="auto_address" type="button">住所自動入力</button>
-            <span th:if="${#fields.hasErrors('postalCode')}" th:errors="*{postalCode}" id="postal-code-error" style="color: red; margin-left: 10px;">正しい郵便番号を入力してください。</span>
+            <span th:if="${postalError}" id="postal-code-error" style="color: red; margin-left: 10px;">正しい郵便番号を入力してください。</span>
             </td>
           </tr>
           <tr>

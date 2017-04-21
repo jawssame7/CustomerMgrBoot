@@ -4,18 +4,25 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.context.annotation.ComponentScan;
 
 import com.kinoshita.springboot.annotation.PostalCode;
 import com.kinoshita.springboot.entity.Area;
 import com.kinoshita.springboot.repository.AreaRepository;
 
-@EnableJpaRepositories("com.kinoshita.springboot.repository")
+/**
+ * 入力された郵便番号が存在するかを調べる
+ * @author wizuser
+ * 
+ * true判定 : 入力されていない、または入力された郵便番号が存在する
+ * false判定 : 入力された郵便番号が存在しない
+ */
+@ComponentScan("com.kinoshita.springboot.repository")
 public class PostalCodeValidator implements ConstraintValidator<PostalCode, String> {
 
 	@Autowired
-	AreaRepository repository;
-
+	AreaRepository repository;	
+	
 	@Override
 	public void initialize(PostalCode postalCode) {
 		
@@ -26,7 +33,7 @@ public class PostalCodeValidator implements ConstraintValidator<PostalCode, Stri
 		
 		if (input == null || input.length() == 0) {
 			return true;
-		}		
+		}
 
 		Area result = repository.findByPostalCode(input);
 		

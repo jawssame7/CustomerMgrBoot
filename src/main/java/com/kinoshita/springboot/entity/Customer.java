@@ -12,7 +12,6 @@ import javax.persistence.Table;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import com.kinoshita.springboot.annotation.NullPermissionNum;
-import com.kinoshita.springboot.annotation.PostalCode;
 
 @Entity
 @Table(name = "customer")
@@ -32,7 +31,6 @@ public class Customer {
 	private String kana;
 	
 	@Column(name = "postal_code")
-	@PostalCode
 	private String postalCode;
 	
 	@Column(name = "address1")

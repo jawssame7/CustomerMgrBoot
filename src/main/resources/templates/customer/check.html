@@ -75,9 +75,9 @@
     	<input name="roundingType" th:value="*{roundingType}" type="hidden" />
     	<input name="closingDay" th:value="*{closingDay}" type="hidden" />
     </form>
-	    <button th:if="*{id} == null" data-action="/customer/new/entry/fix" class="back btn btn-secondary btn-right btn-margin-bottom" type="button">戻る</button>
-	    <button th:if="*{id} != null" th:data-action="'/customer/' + *{id} + '/edit'" class="back btn btn-secondary btn-right btn-margin-bottom" type="button">戻る</button>
-    <div class="table">
+	    <button th:if="${customer.id} == null" data-action="/customer/new/entry/fix" form="fix" class="back btn btn-secondary btn-right btn-margin-bottom" type="submit">戻る</button>
+	    <button th:if="${customer.id} != null" th:data-action="'/customer/' + *{id} + '/edit'" form="fix" class="back btn btn-secondary btn-right btn-margin-bottom" type="submit">戻る</button>
+    <div class="table">    
       <table class="table table-bordered table-sm table-hover table-list">
       	<tbody th:object="${customer}">
           <tr>

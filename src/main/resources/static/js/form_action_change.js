@@ -1,7 +1,7 @@
+/**
+ * formのsubmit先を登録か更新かで切り替える
+ */
 $(function () {
-	$('.back').click (function () {
-		var button = $(this);
-		$('#fix').attr('action', button.data('action'));
-		$('#fix').submit();
-	})
+
+	$('#fix').attr('action', $('.back').data('action'));
 })

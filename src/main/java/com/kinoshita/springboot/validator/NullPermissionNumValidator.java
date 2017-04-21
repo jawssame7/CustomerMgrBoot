@@ -5,6 +5,13 @@ import javax.validation.ConstraintValidatorContext;
 
 import com.kinoshita.springboot.annotation.NullPermissionNum;
 
+/**
+ * 文字数が規定値を満たしているか調べる
+ * @author wizuser
+ * 
+ * true判定 : 入力されていない、または入力された文字数が規定値を満たしている
+ * false判定 : 入力された文字列が規定値から外れている
+ */
 public class NullPermissionNumValidator implements ConstraintValidator<NullPermissionNum, String> {
 
 	@Override
@@ -14,7 +21,8 @@ public class NullPermissionNumValidator implements ConstraintValidator<NullPermi
 	
 	@Override
 	public boolean isValid(String input, ConstraintValidatorContext cxt) {
-		if (input == null || input == "") {
+		
+		if (input == null || input.length() == 0) {
 			return true;
 		}
 		if (input.length() < 10) {

@@ -12,4 +12,7 @@ $(function(){
 			$('#customer-entry-edit-finish').modal();
 		}
 	}
+	
 });
+
+

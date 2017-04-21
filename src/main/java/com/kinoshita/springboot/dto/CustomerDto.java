@@ -75,8 +75,10 @@ public class CustomerDto {
 		}
 	}
 	
-	
-	
+	/**
+	 * 住所1に何も書かれていなければ空白を格納
+	 * @param originAddress1
+	 */
 	public void setAddress1(String originAddress1) {
 		if (originAddress1 == null || originAddress1 == "") {
 			address1 = "";
@@ -85,6 +87,10 @@ public class CustomerDto {
 		}
 	}
 	
+	/**
+	 * 住所2に何も書かれていなければ空白を格納
+	 * @param originAddress2
+	 */
 	public void setAddress2(String originAddress2) {
 		if (originAddress2 == null || originAddress2 == "") {
 			address2 = "";
@@ -93,6 +99,10 @@ public class CustomerDto {
 		}
 	}
 	
+	/**
+	 * 税区分を日本語の説明に変換して格納
+	 * @param originTax_type
+	 */
 	public void setTaxType(Integer originTax_type) {
 		StringBuffer tax_typeSb = new StringBuffer(originTax_type);
 		switch (originTax_type) {
@@ -109,6 +119,10 @@ public class CustomerDto {
 		taxType = new String(tax_typeSb);
 	}
 	
+	/**
+	 * 丸め方法を日本語の説明に変換して格納
+	 * @param originRounding_type
+	 */
 	public void setRoundingType(Integer originRounding_type) {
 		StringBuffer rounding_typeSb = new StringBuffer(originRounding_type);
 		switch (originRounding_type) {
@@ -122,6 +136,10 @@ public class CustomerDto {
 		roundingType = new String(rounding_typeSb);
 	}
 	
+	/**
+	 * 登録日時を見やすいフォーマットに変換して格納
+	 * @param originCreated
+	 */
 	public void setCreated(Date originCreated) {
 		if (originCreated == null) {
 			created = null;
@@ -131,7 +149,10 @@ public class CustomerDto {
 		}
 	}
 	
-	
+	/**
+	 * 更新日時を見やすいフォーマットに変換して格納
+	 * @param originUpdated
+	 */
 	public void setUpdated(Date originUpdated) {
 		if (originUpdated == null) {
 			updated = null;

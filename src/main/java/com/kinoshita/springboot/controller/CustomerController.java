@@ -42,8 +42,10 @@ public class CustomerController {
 	@Autowired
 	AreaService areaService;
 
-
+	@Autowired
 	PaginationUtility pagination;
+	
+	
 	
 	
 	/**
@@ -52,6 +54,7 @@ public class CustomerController {
 	 */
 	@RequestMapping(value = "/")
 	public String index() {
+		
 		return "redirect:/customer/search/page=1";
 	}
 	
@@ -59,12 +62,13 @@ public class CustomerController {
 	
 	
 	/**
-	 * 顧客検索ページ初期表示
+	 * 検索ページ初期表示
 	 * @param mav
 	 * @return
 	 */
 	@RequestMapping("/customer/search/page={pagenumber}")
 	public ModelAndView searchTop(@PathVariable Integer pagenumber, ModelAndView mav) {
+		
 		// customer_list.htmlを適用
 		mav.setViewName("/customer/customer_list");
 		
@@ -88,13 +92,14 @@ public class CustomerController {
 	}
 	
 	/**
-	 * 顧客検索ページ「検索」押下時
+	 * 検索ページ「検索」押下時
 	 * @param condition
 	 * @param mav
 	 * @return
 	 */
 	@RequestMapping(value = "/customer/search/page={pagenumber}", method = RequestMethod.GET)
 	public ModelAndView searchResult(@ModelAttribute CustomerSearchConditions condition, @PathVariable Integer pagenumber, ModelAndView mav) {
+		
 		// customer_list.htmlを適用
 		mav.setViewName("/customer/customer_list");
 		
@@ -116,6 +121,24 @@ public class CustomerController {
 		mav.addObject("last_page", page.getTotalPages() == 0 ? 1 : page.getTotalPages());
 		
 		return mav;
+	}
+	
+	
+	/**
+	 * 顧客検索
+	 * @param condition
+	 * @return
+	 */
+	private List<CustomerDto> getSearchResult(Page<Customer> page) {
+		
+		List<CustomerDto> convertCustomerList = new ArrayList<CustomerDto>();
+		for (Customer customer: page) {
+			CustomerDto customerDto = new CustomerDto(customer);
+			
+			// 文字列変換したデータをリストに格納
+			convertCustomerList.add(customerDto);
+		}
+		return convertCustomerList;
 	}
 	
 	
@@ -149,7 +172,7 @@ public class CustomerController {
 	
 	
 	/** 
-	 * 顧客登録ページ初期表示
+	 * 登録ページ初期表示
 	 * @return
 	 */
 	@RequestMapping(value = "/customer/new/entry")
@@ -166,17 +189,8 @@ public class CustomerController {
 		// 空の顧客オブジェクトを適用
 		mav.addObject("customer", customer);
 		
-		return mav;
-	}
-	
-	/**
-	 * 顧客編集ページ
-	 * @return
-	 */
-	@RequestMapping("/customer/{id}/edit")
-	public ModelAndView update(ModelAndView mav) {
-		// edit.htmlを適用
-		mav.setViewName("/customer/edit");
+		// 郵便番号エラーチェックをスルー
+		mav.addObject("postalError", false);
 		
 		return mav;
 	}
@@ -193,6 +207,9 @@ public class CustomerController {
 		Area resultArea = areaRepository.findByPostalCode(postalCode);
 		return resultArea;
 	}
+	
+	
+	
 	
 	/**
 	 * リダイレクト : 確認 or 登録 or 編集ページ
@@ -213,8 +230,10 @@ public class CustomerController {
 			id = customer.getId().toString();
 		}
 		
+		boolean postalError = postalCodeCheck(customer.getPostalCode());
+		
 		// バリデーションエラーがない場合
-		if (!result.hasErrors()) {
+		if (!result.hasErrors() && postalError == false) {
 			// check.htmlを適用
 			mav.setViewName("redirect:/customer/" + id + "/check");
 
@@ -229,14 +248,41 @@ public class CustomerController {
 			} else {
 				mav.setViewName("redirect:/customer/" + id + "/edit");
 			}
+			attributes.addFlashAttribute("postalError", postalError);
 		}
+		attributes.addFlashAttribute("postalError", postalError);
 		
 		return mav;
 	}
 	
+	/**
+	 * 郵便番号チェック
+	 * @param postalCode
+	 * @return
+	 */
+	public boolean postalCodeCheck(String postalCode) {
+		
+		// false判定 : 郵便番号がnullまたは空欄
+		if (postalCode == null || postalCode.length() == 0) {
+			return false;
+		} else {
+
+			Area exist = areaRepository.findByPostalCode(postalCode);
+			
+			// true判定 : 郵便番号が存在しない
+			if (exist == null) {
+				return true;
+				
+			// true判定 : 郵便番号が存在する
+			} else {
+				return false;
+			}
+		}
+	}
+	
 	
 	/**
-	 * fix顧客登録ページ
+	 * fix登録ページ
 	 * @return
 	 */
 	@RequestMapping(value = "/customer/new/entry/fix", method = RequestMethod.GET)
@@ -253,21 +299,25 @@ public class CustomerController {
 		return mav;
 	}
 	
+	
 	/**
-	 * 顧客確認ページ
+	 * 確認ページ
 	 * @return
 	 */
 	@RequestMapping(value = "/customer/{id}/check", method = RequestMethod.GET)
-	public ModelAndView check(@ModelAttribute("customer") @Validated Customer customer, BindingResult result, ModelAndView mav) {
-
+	public ModelAndView check(@ModelAttribute("customer") @Validated Customer customer, BindingResult result, @PathVariable String id, @ModelAttribute("postalError") boolean postalError, ModelAndView mav) {
+		
 		// BindingResultは必要なくても受け取るようにする
 		// 参考 : http://qiita.com/orangeeeee/items/334cf4b7042efbce9265
+		
+		// 登録/編集ページに戻った際住所自動入力がerrorを吐かないようにpostalErrorも受け取っておく
 		
 		// check.htmlを適用
 		mav.setViewName("/customer/check");
 		
 		return mav;
 	}
+	
 	
 	
 	
@@ -278,14 +328,38 @@ public class CustomerController {
 	 */
 	@RequestMapping(value = "/customer/save", method = RequestMethod.POST)
 	@Transactional(readOnly = false)
-	public String save(@ModelAttribute("customer") Customer customer, ModelAndView mav) {
+	public String save(@ModelAttribute("customer") Customer customer, ModelAndView mav, RedirectAttributes attributes) {
+		
 		if (customer.getId() == null) {
 			customer.setCreated(new Date());
 		}
 		customer.setUpdated(new Date());
 		customerRepository.saveAndFlush(customer);
 		
+		attributes.addAttribute("saved", true);
+		
 		return "redirect:/customer/" + customer.getId() + "/detail";
+	}
+	
+	/**
+	 * （登録・編集）保存後顧客詳細
+	 * @return
+	 */
+	@RequestMapping(value="/customer/{id}/detail/saved={saved}", method = RequestMethod.GET)
+	public ModelAndView saveLaterDetail(@PathVariable Long id, @RequestParam("saved") boolean saved, ModelAndView mav) {
+		
+		// detail.htmlを適用
+		mav.setViewName("/customer/detail");
+		
+		// 顧客IDから顧客データを取得
+		Customer customer = customerRepository.findOne(id);
+		
+		// CustomerDtoオブジェクトに移す
+		CustomerDto customerDto = new CustomerDto(customer); 
+		
+		// ビューに顧客データを反映
+		mav.addObject("customer", customerDto);
+		return mav;
 	}
 	
 	/**
@@ -294,6 +368,7 @@ public class CustomerController {
 	 */
 	@RequestMapping("/customer/{id}/detail")
 	public ModelAndView detail(@PathVariable Long id, ModelAndView mav) {
+		
 		// detail.htmlを適用
 		mav.setViewName("/customer/detail");
 		
@@ -307,53 +382,31 @@ public class CustomerController {
 		mav.addObject("customer", customerDto);
 		return mav;
 	}
+	
+	
+	
 
+	
 	/**
-	 * （登録・編集）保存後顧客詳細
+	 * 編集ページ
 	 * @return
 	 */
-	@RequestMapping(value="/customer/{id}/detail", method = RequestMethod.POST)
-	@Transactional(readOnly = false)
-	public ModelAndView saveLaterDetail(@PathVariable Long id, ModelAndView mav) {
-		// detail.htmlを適用
-		mav.setViewName("/customer/detail");
+	@RequestMapping("/customer/{id}/edit")
+	public ModelAndView update(ModelAndView mav) {
 		
-		// 顧客IDから顧客データを取得
-		Customer customer = customerRepository.findOne(id);
+		// edit.htmlを適用
+		mav.setViewName("/customer/edit");
 		
-		// CustomerDtoオブジェクトに移す
-		CustomerDto customerDto = new CustomerDto(customer); 
-		
-		// ビューに顧客データを反映
-		mav.addObject("customer", customerDto);
 		return mav;
 	}
 	
-	
-	
-	
-	/**
-	 * 顧客検索
-	 * @param condition
-	 * @return
-	 */
-	private List<CustomerDto> getSearchResult(Page<Customer> page) {
-		
-		List<CustomerDto> convertCustomerList = new ArrayList<CustomerDto>();
-		for (Customer customer: page) {
-			CustomerDto customerDto = new CustomerDto(customer);
-			
-			// 文字列変換したデータをリストに格納
-			convertCustomerList.add(customerDto);
-		}
-		return convertCustomerList;
-	}
 	
 	/**
 	 * 都道府県一覧取得
 	 * @return
 	 */
 	private List<String> getStateList() {
+		
 		return areaRepository.getStates();
 	}
 }
