@@ -42,14 +42,14 @@ public class CustomerSpecifications {
 	
 	/**
 	 * 郵便番号　完全一致検索
-	 * @param postal_code
+	 * @param postalCode
 	 * @return
 	 */
 	public static Specification<Customer> postalCodeContains(String postalCode) {
 		return StringUtils.isEmpty(postalCode) ? null : new Specification<Customer>() {
 			@Override
 			public Predicate toPredicate(Root<Customer> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-				return cb.equal(root.get("postal_code"), postalCode);
+				return cb.equal(root.get("postalCode"), postalCode);
 			}
 		};
 	}

@@ -42,13 +42,13 @@ public class CustomerDto {
 		// 税区分番号に対応した税区分の種類を格納
 		this.setTaxType(origin.getTaxType());
 		
-		// 丸め方法番号に対応した税区分の種類を格納
+		// 丸め方法番号に対応した丸め方法の種類を格納
 		this.setRoundingType(origin.getRoundingType());
 		
-		// 登録日時をyyyy年MM月dd日 hh時mm分のフォーマットにして格納
+		// 登録日時をyyyy年MM月dd日 kk時mm分のフォーマットにして格納
 		this.setCreated(origin.getCreated());
 		
-		// 更新日時をyyyy年MM月dd日 hh時mm分のフォーマットにして格納
+		// 更新日時をyyyy年MM月dd日 kk時mm分のフォーマットにして格納
 		this.setUpdated(origin.getUpdated());
 	}
 	

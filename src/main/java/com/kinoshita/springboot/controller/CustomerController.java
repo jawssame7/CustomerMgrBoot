@@ -109,7 +109,7 @@ public class CustomerController {
 		// 検索条件を反映
 		mav.addObject("condition", condition);
 		
-		// 顧客全取得
+		// 顧客検索
 		Page<Customer> page = customerService.findCustomers(condition, pagenumber);
 		List<CustomerDto> customerList = this.getSearchResult(page);
 		
@@ -273,7 +273,7 @@ public class CustomerController {
 			if (exist == null) {
 				return true;
 				
-			// true判定 : 郵便番号が存在する
+			// false判定 : 郵便番号が存在する
 			} else {
 				return false;
 			}
@@ -310,7 +310,7 @@ public class CustomerController {
 		// BindingResultは必要なくても受け取るようにする
 		// 参考 : http://qiita.com/orangeeeee/items/334cf4b7042efbce9265
 		
-		// 登録/編集ページに戻った際住所自動入力がerrorを吐かないようにpostalErrorも受け取っておく
+		// postalErrorも受け取っておくことで、登録/編集ページに戻った際住所自動入力ボタンでjQueryエラーになるのを回避できる
 		
 		// check.htmlを適用
 		mav.setViewName("/customer/check");
@@ -385,17 +385,23 @@ public class CustomerController {
 	
 	
 	
-
+	
 	
 	/**
 	 * 編集ページ
 	 * @return
 	 */
 	@RequestMapping("/customer/{id}/edit")
-	public ModelAndView update(ModelAndView mav) {
+	public ModelAndView update(@PathVariable Long id, ModelAndView mav) {
 		
 		// edit.htmlを適用
 		mav.setViewName("/customer/edit");
+		
+		// 顧客IDから顧客データを取得
+		Customer customer = customerRepository.findOne(id);
+		
+		// ビューに顧客データを反映
+		mav.addObject("customer", customer);
 		
 		return mav;
 	}

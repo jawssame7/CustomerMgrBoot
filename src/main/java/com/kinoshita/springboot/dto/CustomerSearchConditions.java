@@ -31,8 +31,8 @@ public class CustomerSearchConditions {
 	public String getPostalCode() {
 		return postalCode;
 	}
-	public void setPostalCode(String postal_code) {
-		this.postalCode = postal_code;
+	public void setPostalCode(String postalCode) {
+		this.postalCode = postalCode;
 	}
 	public String getAddress1() {
 		return address1;

@@ -51,7 +51,7 @@
 <!-- テーブル -->
     <h5>顧客情報詳細</h5>
     <button type="button" class="btn btn-danger btn-right btn-margin-left btn-margin-bottom" data-toggle="modal" data-target="#customer-delete-check" data-whatever="1">削除</button>
-    <button type="button" class="btn btn-success btn-right btn-margin-left" onclick="location.href='/customer/edit'">編集</button>
+    <button type="button" class="btn btn-success btn-right btn-margin-left" th:onclick="location.href='/customer/' + /*[[*{customer.id}]]*/ + '/edit'">編集</button>
     <div class="table">
       <table class="table table-bordered table-sm table-hover table-list">
       	<tbody th:object="${customer}">
@@ -64,7 +64,7 @@
             <td th:text="*{customer.name}">名称</td>
           </tr>
           <tr>
-         		<th>かな</th> 
+         		<th>かな</th>
             <td th:text="*{customer.kana}">かな</td>
           </tr>
           <tr>
