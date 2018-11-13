@@ -50,10 +50,7 @@
 
 <!-- テーブル -->
     <h5>この内容でよろしいですか？</h5>
-    	<button class="btn btn-info btn-right btn-margin-left btn-margin-bottom" id="customer-finish-btn" type="submit">OK</button>
-    	<button class="back btn btn-secondary btn-right btn-margin-bottom" id="customer-back-btn" type="submit">戻る</button>
-    <form id="fix" method="post" th:object="${customer}" style="display: none;">
-    	<input name="id" th:value="*{id}" type="hidden" />
+    <form id="save" method="post" action="/customer/save" th:object="${customer}" style="display: none;">
     	<input name="name" th:value="*{name}" type="hidden" />
     	<input name="kana" th:value="*{kana}" type="hidden" />
     	<input name="postalCode" th:value="*{postalCode}" type="hidden" />
@@ -65,6 +62,21 @@
     	<input name="roundingType" th:value="*{roundingType}" type="hidden" />
     	<input name="closingDay" th:value="*{closingDay}" type="hidden" />
     </form>
+    	<button form="save" class="btn btn-info btn-right btn-margin-left btn-margin-bottom" id="customer-finish-btn" type="submit">OK</button>
+    <form id="fix" method="get" th:object="${customer}" style="display: none;">
+    	<input name="name" th:value="*{name}" type="hidden" />
+    	<input name="kana" th:value="*{kana}" type="hidden" />
+    	<input name="postalCode" th:value="*{postalCode}" type="hidden" />
+    	<input name="address1" th:value="*{address1}" type="hidden" />
+    	<input name="address2" th:value="*{address2}" type="hidden" />
+    	<input name="tel" th:value="*{tel}" type="hidden" />
+    	<input name="fax" th:value="*{fax}" type="hidden" />
+    	<input name="taxType" th:value="*{taxType}" type="hidden" />
+    	<input name="roundingType" th:value="*{roundingType}" type="hidden" />
+    	<input name="closingDay" th:value="*{closingDay}" type="hidden" />
+    </form>
+	    <button th:if="${customer.id} == null" data-action="/customer/new/entry/fix" form="fix" class="back btn btn-secondary btn-right btn-margin-bottom" type="submit">戻る</button>
+	    <button th:if="${customer.id} != null" th:data-action="'/customer/' + *{id} + '/edit'" form="fix" class="back btn btn-secondary btn-right btn-margin-bottom" type="submit">戻る</button>
     <div class="table">    
       <table class="table table-bordered table-sm table-hover table-list">
       	<tbody th:object="${customer}">

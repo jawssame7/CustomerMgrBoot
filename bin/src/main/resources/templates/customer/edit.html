@@ -52,7 +52,7 @@
     <h5>編集</h5><span class="explain">入力終了後、「確認」をクリックしてください。</span>
     <form id="edit" method="post" th:object="${customer}" action="/customer/redirect/check">
     <button type="submit" form="edit" class="btn btn-info btn-right btn-margin-left btn-margin-bottom">確認</button>
-    <button type="button" class="btn btn-secondary btn-right btn-margin-bottom back-btn">戻る</button>
+    <button type="button" class="btn btn-secondary btn-right btn-margin-bottom" th:onclick="location.href='/customer/' + *{id} + '/detail'">戻る</button>
     <div class="table">
       <table class="table table-bordered table-sm table-hover table-list">
       	<tbody>
@@ -60,7 +60,6 @@
           	<th>名称</th>
             <td><input name="name" th:value="*{name}" id="name" class="width-650" maxlength="40" form="edit" type="text" />
             <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" style="color: red; margin-left: 10px;">必須項目です。</span>
-            <input type="hidden" name="id" th:attr="value=*{id}"/>
             </td>
           </tr>
           <tr>
@@ -139,6 +138,5 @@
 	<script src="/js/bootstrap.js"></script>
 	<script src="/js/table_size.js"></script>
 	<script src="/js/auto_address.js"></script>
-	<script src="/js/edit.js"></script>
 </body>
 </html>

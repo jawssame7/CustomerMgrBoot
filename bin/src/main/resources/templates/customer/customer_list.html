@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>入金管理システム</title>
+	<!-- スタイルシート -->
+	<link rel="stylesheet" href="/css/jquery-ui.css" />
+	<link rel="stylesheet" href="/css/bootstrap.css" />
+	<link rel="stylesheet" href="/css/layout.css" />
+	<link rel="stylesheet" href="/css/style.css" />
+</head>
+
+<body>
+<!-- タイトルバー -->
+<nav class="navbar navbar-toggleable-md navbar-inverse fixed-top bg-inverse">
+  <button class="navbar-toggler navbar-toggler-right hidden-lg-up" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <a class="navbar-brand" href="/">入金管理システム</a>
+
+  <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+		<a class="user-address" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">ログイン中　：　abc@defghij.jp</a>
+		<div class="dropdown-menu">
+		  <a class="dropdown-item" href="#">ログアウト</a>
+		</div>
+  </div>
+</nav>
+
+<div class="container-fluid">
+  <div class="row">
+  <!-- サイドメニュー -->
+    <nav class="col-sm-3 col-md-2 hidden-xs-down bg-faded sidebar">
+      <ul class="nav nav-pills flex-column">
+        <li class="nav-item">
+          <a class="nav-link active" href="/">顧客データ<span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/payment/search">入金データ</a>
+        </li>
+      </ul>
+
+      <ul class="nav nav-pills flex-column">
+        <li class="nav-item">
+          <a class="nav-link" href="/admin/search">管理者データ</a>
+        </li>
+      </ul>
+    </nav>
+
+<!-- メイン -->
+<main class="col-sm-9 offset-sm-3 col-md-10 offset-md-2 pt-3">
+<!-- 検索欄 -->
+    <div id="accordion" role="tablist" aria-multiselectable="true">
+      <div class="card">
+        <div class="card-header-sm" role="tab" id="heading">
+          <h5 class="mb-0">
+						<a data-toggle="collapse" data-parent="#accordion" href="#collapse" aria-expanded="true" aria-controls="collapse" class="search-area">
+							検索条件の設定
+            </a>
+					</h5>
+        </div>
+        
+        <div id="collapse" class="collapse show search-list" role="tabpanel" aria-labelledby="heading">
+          <div class="card-block-sm">
+          <form id="form-search" class="form-scroll" action="/customer/search/page=1" method="get" th:object="${condition}">
+						<div class="form-group-sm row">
+						  <label for="name" class="col-2 col-form-label">顧客名称</label>
+						  <div class="col-10">
+						    <input id="customer_name" class="form-control" type="search" name="name" maxlength="40" th:value="*{name}" />
+						    <div id="name_suggest" class="suggest" style="display: none;"></div>
+						  </div>
+						</div>
+						<div class="form-group-sm row">
+						  <label for="kana" class="col-2 col-form-label">顧客名称（かな）</label>
+						  <div class="col-10">
+						    <input id="customer_kana" class="form-control" type="search" name="kana" th:value="*{kana}"/>
+						  	<div id="kana_suggest" class="suggest" style="display: none;"></div>
+						  </div>
+						</div>
+						<div class="form-group-sm row">
+						  <label for="postalCode" class="col-2 col-form-label">郵便番号<small>&emsp;※半角数字</small></label>
+						  <div class="col-2">
+						    <input id="postalCode" class="form-control" type="search" name="postalCode" maxlength="7" th:value="*{postalCode}" />
+						  </div>
+						</div>
+						<div class="form-group-sm row">
+						  <label for="address1" class="col-2 col-form-label">住所1</label>
+						  <div class="col-2">
+						    <select id="address1" class="search-select" name="address1">
+						    	<option value="">都道府県選択</option>
+						    	<option th:each="area: ${area_list}" th:text="${area}" th:value="${area}" th:selected="${area} == *{address1}"></option>
+						    </select>
+						  </div>
+						  <div class="col-1"></div>
+						  <label for="address2" class="col-2 col-form-label">住所2</label>
+						  <div class="col-5">
+						    <input id="address2" class="form-control" type="search" name="address2" maxlength="40" th:value="*{address2}" />
+						  </div>
+						</div>
+						<div class="form-group-sm row">
+						  <label for="tel" class="col-2 col-form-label">電話番号<small>&emsp;※半角数字</small></label>
+						  <div class="col-2">
+						    <input id="tel" class="form-control" type="search" name="tel" maxlength="14" th:value="*{tel}" />
+						  </div>
+						  <div class="col-1"></div>
+						  <label for="fax" class="col-2 col-form-label">FAX番号<small>&emsp;※半角数字</small></label>
+						  <div class="col-2">
+						    <input id="fax" class="form-control" type="search" name="fax" maxlength="14" th:value="*{fax}" />
+						  </div>
+						</div>
+					</form>
+					<hr />
+          <button type="submit" id="searchBtn" form="form-search" class="btn btn-primary btn-right btn-margin-left">検　索</button>
+          <input type="button" id="conditionDelete" form="form-search" value="検索条件リセット" class="btn btn-secondary btn-search btn-right" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h5>顧客データ</h5>
+
+    <button form="entry" type="button" onclick="location.href='/customer/new/entry'" class="btn btn-success btn-right btn-margin-bottom margin-right">新規登録</button>
+    
+<!-- データテーブル -->
+      <div class="table-responsive">
+        <table class="table table-striped table-bordered table-sm table-hover">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>名称</th>
+              <th>かな</th>
+              <th>郵便番号</th>
+              <th>住所</th>
+              <th>電話番号</th>
+              <th>FAX番号</th>
+              <th>税区分</th>
+              <th>丸め方法</th>
+              <th>締め日</th>
+              <th>登録日時</th>
+              <th>更新日時</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="customer: ${customer_list}">
+             <th:block th:object="${customer.customer}">
+              <td th:text="*{id}">ID</td>
+              <td><a th:text="*{name}" th:href="'/customer/' + *{id} + '/detail'">名前</a></td>
+              <td th:text="*{kana}">かな</td>
+              <td th:text="${customer.postalCode}">郵便番号</td>
+              <td th:text="${customer.address1} + ${customer.address2}">住所1 + 住所2</td>
+              <td th:text="*{tel}">電話番号</td>
+              <td th:text="*{fax}">FAX番号</td>
+              <td th:text="${customer.taxType}">税区分</td>
+              <td th:text="${customer.roundingType}">丸め方法</td>
+              <td th:text="*{closingDay} + '日'">締め日</td>
+              <td th:text="${customer.created}">登録日時</td>
+              <td th:text="${customer.updated}">更新日時</td>
+             </th:block>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+      <!-- ページネーション -->
+	    <div>
+		    <ul class="pagination justify-content-center">
+		    	<!-- 最初へ / 前へ -->
+		    	<li th:class="${now_page} == 1 ? 'disabled page-item' : 'page-item'">
+		        <a class="page-link" href="page=1">
+		          <span aria-hidden="true">&lt;&lt;</span>
+		        </a>
+		      </li>
+		      <li th:class="${now_page} == 1 ? 'disabled page-item' : 'page-item'">
+		        <a class="page-link" th:href="'page=' + ${now_page - 1}">
+		          <span aria-hidden="true">&lt;</span>
+		        </a>
+		      </li>
+		      
+		      <!-- 最大ページ > 10 && 現在ページ <= 6 -->
+	   	    <li th:class="${i} == ${now_page} ? 'page-item active' : 'page-item'" th:if="${last_page} gt 10 and ${now_page} le 6" th:each="i : ${#numbers.sequence(1, 10)}">
+		        <a class="page-link" th:href="@{'page=' + ${i}}" th:text="${i}">
+		          <span aria-hidden="true"></span>
+		        </a>
+		      </li>
+		      
+		      <!-- 最大ページ > 10 && 現在ページ > 6 && 現在ページ < 最大ページ - 4 -->
+		      <li th:class="${now_page + i} == ${now_page} ? 'page-item active' : 'page-item'" th:if="${last_page} gt 10 and ${now_page} gt 6 and ${now_page} lt ${last_page - 4}" th:each="i : ${#numbers.sequence(-5, 4)}">
+		        <a class="page-link" th:href="@{'page=' + ${now_page + i}}" th:text="${now_page + i}">
+		          <span aria-hidden="true"></span>
+		        </a>
+		      </li>
+		      
+		      <!-- 最大ページ > 10 && 現在ページ >= 最大ページ - 4 -->
+		      <li th:class="${i} == ${now_page} ? 'page-item active' : 'page-item'" th:if="${last_page} gt 10 and ${now_page} ge ${last_page - 4}" th:each="i : ${#numbers.sequence(last_page - 9, last_page)}">
+		        <a class="page-link" th:href="@{'page=' + ${i}}" th:text="${i}">
+		          <span aria-hidden="true"></span>
+		        </a>
+		      </li>
+		      
+		      <!-- 最大ページ <= 10 -->
+		      <li th:class="${i} == ${now_page} ? 'page-item active' : 'page-item'" th:unless="${last_page} > 10" th:each="i : ${#numbers.sequence(1, last_page)}">
+		        <a class="page-link" th:href="@{'page=' + ${i}}" th:text="${i}">
+		          <span aria-hidden="true"></span>
+		        </a>
+		      </li>
+		      
+		      <!-- 次へ / 最後へ -->
+		      <li th:class="${now_page == last_page} ? 'disabled page-item' : 'page-item'">
+		        <a class="page-link" th:href="@{'page=' + ${#pageHelper.next(now_page)}}">
+		          <span aria-hidden="true">&gt;</span>
+		        </a>
+		      </li>
+		      <li th:class="${now_page == last_page} ? 'disabled page-item' : 'page-item'">
+		        <a class="page-link" th:href="@{'page=' + ${last_page}}">
+		          <span aria-hidden="true">&gt;&gt;</span>
+		        </a>
+		      </li>
+		    </ul>
+		  </div>
+</main>
+  </div>
+</div>
+<!-- スクリプト -->
+	<script src="/js/jquery-3.1.1.js"></script>
+	<script src="/js/jquery-ui.js"></script>
+	<script src="/js/tether.js"></script>
+	<script src="/js/bootstrap.js"></script>
+	<script src="/js/table_size.js"></script>
+	<script src="/js/suggest.js"></script>
+	<script src="/js/suggest_customer.js"></script>
+	<script src="/js/form_delete.js"></script>
+	<script src="/js/search.js"></script>
+</body>
+</html>
